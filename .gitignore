@@ -1,0 +1,14 @@
+# wordpress test environment
+/tmp/
+
+# composer
+/vendor/
+
+# sami docs
+/api-reference/
+
+# phpstorm
+.idea
+
+# phpunit
+.clover.xml

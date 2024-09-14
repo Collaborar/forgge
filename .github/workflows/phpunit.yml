@@ -1,0 +1,80 @@
+name: PHPUnit Tests
+
+on: push
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.4', '7.1', '7.0' ]
+        wp-versions: ['5.9', '5.8', '5.7']
+        include:
+          - php-versions: '8.1'
+            wp-versions: '5.9'
+          - php-versions: '8.0'
+            wp-versions: '5.9'
+          - php-versions: '5.6'
+            wp-versions: '4.7'
+          - php-versions: '5.5'
+            wp-versions: '4.7'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: '5.7'
+          my-cnf: |
+            collation_server=utf8_unicode_ci
+            character_set_server=utf8
+
+      - name: Set up database
+        run: mysql -uroot -h127.0.0.1 -e 'CREATE DATABASE IF NOT EXISTS forgge_tests;'
+
+      - name: Install WordPress
+        run: bash tests/bin/install.sh forgge_tests root '' 127.0.0.1 ${{ matrix.wp-versions }}
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: xdebug
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-progress
+
+      - name: Install Test Environment
+        run: composer run install-test-env
+
+      - name: Validate PHP syntax
+        # The usage of bash + || exit 1 is to ensure xargs does not exit on first error.
+        run: find src/ \( -name '*.php' \) | xargs -n1 bash -c 'php -lf $0 || exit 1'
+
+      - name: Run tests
+        run: composer run test
+
+      - name: Set up PHP 7.x for Scrutinizer
+        if: ${{ matrix.php-versions >= 8.0 }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          coverage: xdebug
+
+      - name: Upload coverage to Scrutinizer-CI.
+        run: wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./tmp/clover.xml

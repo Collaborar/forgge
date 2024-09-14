@@ -1,0 +1,153 @@
+<?php
+
+namespace ForggeTests\Helpers;
+
+use Mockery;
+use stdClass;
+use Forgge\Helpers\MixedType;
+use ForggeTestTools\TestService;
+use ForggeTestTools\TestCase;
+
+/**
+ * @coversDefaultClass \Forgge\Helpers\MixedType
+ */
+class MixedTypeTest extends TestCase {
+	public function callableStub( $message = 'foobar' ) {
+		return $message;
+	}
+
+	/**
+	 * @covers ::toArray
+	 */
+	public function testToArray_String_ReturnArrayContainingString() {
+		$parameter = 'foobar';
+		$expected = [$parameter];
+
+		$this->assertEquals( $expected, MixedType::toArray( $parameter ) );
+	}
+
+	/**
+	 * @covers ::toArray
+	 */
+	public function testToArray_Array_ReturnSameArray() {
+		$expected = ['foobar'];
+
+		$this->assertEquals( $expected, MixedType::toArray( $expected ) );
+	}
+
+	/**
+	 * @covers ::value
+	 */
+	public function testValue_Callable_CallAndReturn() {
+		$callable = [$this, 'callableStub'];
+		$expected = 'foobar';
+
+		$this->assertEquals( $expected, MixedType::value( $callable ) );
+	}
+
+	/**
+	 * @covers ::value
+	 */
+	public function testValue_CallableWithArguments_CallAndReturn() {
+		$callable = [$this, 'callableStub'];
+		$expected = 'hello world';
+
+		$this->assertEquals( $expected, MixedType::value( $callable, [$expected] ) );
+	}
+
+	/**
+	 * @covers ::value
+	 */
+	public function testValue_Instance_CallInstanceMethodAndReturn() {
+		$expected = 'foobar';
+
+		$this->assertEquals( $expected, MixedType::value( $this, [], 'callableStub' ) );
+	}
+
+	/**
+	 * @covers ::value
+	 */
+	public function testValue_ClassName_CreateInstanceCallMethodAndReturn() {
+		$expected = 'foobar';
+
+		$this->assertEquals( $expected, MixedType::value( TestService::class, [], 'getTest' ) );
+	}
+
+	/**
+	 * @covers ::value
+	 */
+	public function testValue_ClassNameWithInstantiator_UsesInstantiator() {
+		$method = 'foo';
+		$expected = 'bar';
+		$instantiator = function () use ( $method, $expected ) {
+			$mock = Mockery::mock();
+
+			$mock->shouldReceive( $method )
+				->andReturn( $expected );
+
+			return $mock;
+		};
+
+		$this->assertEquals( $expected, MixedType::value( TestService::class, [], $method, $instantiator ) );
+	}
+
+	/**
+	 * @covers ::value
+	 */
+	public function testValue_Other_ReturnSame() {
+		$expected = 'someStringThatIsNotACallable';
+
+		$this->assertSame( $expected, MixedType::value( $expected ) );
+	}
+
+	/**
+	 * @covers ::isClass
+	 */
+	public function testIsClass() {
+		$this->assertTrue( MixedType::isClass( 'stdClass' ) );
+		$this->assertTrue( MixedType::isClass( TestService::class ) );
+		$this->assertFalse( MixedType::isClass( 'NonExistentClassName' ) );
+		$this->assertFalse( MixedType::isClass( 1 ) );
+		$this->assertFalse( MixedType::isClass( new stdClass() ) );
+		$this->assertFalse( MixedType::isClass( [] ) );
+	}
+
+	/**
+	 * @covers ::instantiate
+	 */
+	public function testInstantiate() {
+		$expected = TestService::class;
+
+		$this->assertInstanceOf( $expected, MixedType::instantiate( TestService::class ) );
+	}
+
+	/**
+	 * @covers ::normalizePath
+	 */
+	public function testNormalizePath() {
+		$ds = DIRECTORY_SEPARATOR;
+		$input = '/foo\\bar/baz\\\\foobar';
+
+		$this->assertEquals( "{$ds}foo{$ds}bar{$ds}baz{$ds}foobar", MixedType::normalizePath( $input ) );
+		$this->assertEquals( '/foo/bar/baz/foobar', MixedType::normalizePath( $input, '/' ) );
+		$this->assertEquals( '\\foo\\bar\\baz\\foobar', MixedType::normalizePath( $input, '\\' ) );
+	}
+
+	/**
+	 * @covers ::addTrailingSlash
+	 */
+	public function testAddTrailingSlash() {
+		$input = '/foo';
+
+		$this->assertEquals( "/foo/", MixedType::addTrailingSlash( $input, '/' ) );
+	}
+
+	/**
+	 * @covers ::removeTrailingSlash
+	 */
+	public function testRemoveTrailingSlash() {
+		$input = '/foo/';
+
+		$this->assertEquals( "/foo", MixedType::removeTrailingSlash( $input, '/' ) );
+	}
+}

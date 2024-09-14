@@ -1,0 +1,12 @@
+/.github export-ignore
+/assets export-ignore
+/tests export-ignore
+/tmp export-ignore
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.sami.php export-ignore
+/.scrutinizer.yml export-ignore
+/phpcs.xml export-ignore
+/phpunit.xml export-ignore
+/RELEASE_GUIDE.md export-ignore
