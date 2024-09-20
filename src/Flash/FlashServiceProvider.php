@@ -3,6 +3,7 @@
 
 namespace Forgge\Flash;
 
+use Pimple\Container;
 use Forgge\ServiceProviders\ServiceProviderInterface;
 
 /**
@@ -14,7 +15,7 @@ class FlashServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		$container[ FORGGE_FLASH_KEY ] = function ( $c ) {
 			$session = null;
 			if ( isset( $c[ FORGGE_SESSION_KEY ] ) ) {
@@ -36,7 +37,7 @@ class FlashServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

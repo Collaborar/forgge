@@ -122,17 +122,17 @@ class ApplicationTestServiceProviderMock implements ServiceProviderInterface {
 			->once();
 	}
 
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		call_user_func_array( [$this->mock, 'register'], func_get_args() );
 	}
 
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		call_user_func_array( [$this->mock, 'bootstrap'], func_get_args() );
 	}
 }
 
 class ApplicationTestKernelServiceProviderMock implements ServiceProviderInterface {
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		$mock = Mockery::mock();
 
 		$mock->shouldReceive( 'bootstrap' )
@@ -141,7 +141,7 @@ class ApplicationTestKernelServiceProviderMock implements ServiceProviderInterfa
 		$container[ FORGGE_WORDPRESS_HTTP_KERNEL_KEY ] = $mock;
 	}
 
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Do nothing.
 	}
 }

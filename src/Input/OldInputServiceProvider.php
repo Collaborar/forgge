@@ -3,6 +3,7 @@
 
 namespace Forgge\Input;
 
+use Pimple\Container;
 use Forgge\ServiceProviders\ServiceProviderInterface;
 
 /**
@@ -14,7 +15,7 @@ class OldInputServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		$container[ FORGGE_OLD_INPUT_KEY ] = function ( $c ) {
 			return new OldInput( $c[ FORGGE_FLASH_KEY ] );
 		};
@@ -30,7 +31,7 @@ class OldInputServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

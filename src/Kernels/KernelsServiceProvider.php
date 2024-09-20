@@ -3,6 +3,7 @@
 
 namespace Forgge\Kernels;
 
+use Pimple\Container;
 use Forgge\ServiceProviders\ExtendsConfigTrait;
 use Forgge\ServiceProviders\ServiceProviderInterface;
 
@@ -17,7 +18,7 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		$this->extendConfig( $container, 'middleware', [
 			'flash' => \Forgge\Flash\FlashMiddleware::class,
 			'old_input' => \Forgge\Input\OldInputMiddleware::class,
@@ -70,7 +71,7 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }
