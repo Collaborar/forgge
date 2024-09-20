@@ -191,7 +191,7 @@ class ResponseService {
 	 */
 	public function output( $output ) {
 		$response = $this->response();
-		$response = $response->withBody( Psr7\stream_for( $output ) );
+		$response = $response->withBody( Psr7\Utils::streamFor( $output ) );
 		return $response;
 	}
 
@@ -204,7 +204,7 @@ class ResponseService {
 	public function json( $data ) {
 		$response = $this->response();
 		$response = $response->withHeader( 'Content-Type', 'application/json' );
-		$response = $response->withBody( Psr7\stream_for( wp_json_encode( $data ) ) );
+		$response = $response->withBody( Psr7\Utils::streamFor( wp_json_encode( $data ) ) );
 		return $response;
 	}
 
