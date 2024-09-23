@@ -16,13 +16,10 @@ class CsrfServiceProvider implements ServiceProviderInterface {
 	 * {@inheritDoc}
 	 */
 	public function register( Container $container ): void {
-		$container[ FORGGE_CSRF_KEY ] = function () {
-			return new Csrf();
-		};
+		$container[ FORGGE_CSRF_KEY ] = fn (): Csrf => new Csrf();
 
-		$container[ CsrfMiddleware::class ] = function ( $c ) {
-			return new CsrfMiddleware( $c[ FORGGE_CSRF_KEY ] );
-		};
+		$container[ CsrfMiddleware::class ] = fn ( Container $c ): CsrfMiddleware =>
+			new CsrfMiddleware( $c[ FORGGE_CSRF_KEY ] );
 
 		$app = $container[ FORGGE_APPLICATION_KEY ];
 		$app->alias( 'csrf', FORGGE_CSRF_KEY );
