@@ -18,7 +18,7 @@ class Url {
 	 * @param  string           $home_url
 	 * @return string
 	 */
-	public static function getPath( RequestInterface $request, $home_url = '' ) {
+	public static function getPath( RequestInterface $request, string $home_url = '' ): string {
 		$parsed_request = wp_parse_url( $request->getUrl() );
 		$parsed_home = wp_parse_url( $home_url ? $home_url : home_url( '/' ) );
 
@@ -49,7 +49,7 @@ class Url {
 	 * @param bool $leave_blank
 	 * @return string
 	 */
-	public static function addLeadingSlash( $url, $leave_blank = false ) {
+	public static function addLeadingSlash( string $url, bool $leave_blank = false ): string {
 		if ( $leave_blank && $url === '' ) {
 			return '';
 		}
@@ -63,7 +63,7 @@ class Url {
 	 * @param  string $url
 	 * @return string
 	 */
-	public static function removeLeadingSlash( $url ) {
+	public static function removeLeadingSlash( string $url ): string {
 		return preg_replace( '/^\/+/', '', $url );
 	}
 
@@ -74,7 +74,7 @@ class Url {
 	 * @param bool $leave_blank
 	 * @return string
 	 */
-	public static function addTrailingSlash( $url, $leave_blank = false ) {
+	public static function addTrailingSlash( string $url, bool $leave_blank = false ): string {
 		if ( $leave_blank && $url === '' ) {
 			return '';
 		}
@@ -88,7 +88,7 @@ class Url {
 	 * @param  string $url
 	 * @return string
 	 */
-	public static function removeTrailingSlash( $url ) {
+	public static function removeTrailingSlash( string $url ): string {
 		return untrailingslashit( $url );
 	}
 }

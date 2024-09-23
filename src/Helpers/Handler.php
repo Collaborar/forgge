@@ -18,14 +18,14 @@ class Handler {
 	 *
 	 * @var GenericFactory
 	 */
-	protected $factory = null;
+	protected ?GenericFactory $factory = null;
 
 	/**
 	 * Parsed handler
 	 *
 	 * @var array|Closure
 	 */
-	protected $handler = null;
+	protected array|Closure|null $handler = null;
 
 	/**
 	 * Constructor
@@ -35,7 +35,12 @@ class Handler {
 	 * @param string               $default_method
 	 * @param string               $namespace
 	 */
-	public function __construct( GenericFactory $factory, $raw_handler, $default_method = '', $namespace = '' ) {
+	public function __construct(
+		GenericFactory $factory,
+		string|array|Closure $raw_handler,
+		string $default_method = '',
+		string $namespace = ''
+	) {
 		$this->factory = $factory;
 
 		$handler = $this->parse( $raw_handler, $default_method, $namespace );
@@ -55,7 +60,7 @@ class Handler {
 	 * @param  string               $namespace
 	 * @return array|Closure|null
 	 */
-	protected function parse( $raw_handler, $default_method, $namespace ) {
+	protected function parse( string|array|Closure $raw_handler, string $default_method, string $namespace ): array|Closure|null {
 		if ( $raw_handler instanceof Closure ) {
 			return $raw_handler;
 		}
@@ -75,7 +80,7 @@ class Handler {
 	 * @param  string     $namespace
 	 * @return array|null
 	 */
-	protected function parseFromArray( $raw_handler, $default_method, $namespace ) {
+	protected function parseFromArray( array $raw_handler, string $default_method, string $namespace ): ?array {
 		$class = Arr::get( $raw_handler, 0, '' );
 		$class = preg_replace( '/^\\\\+/', '', $class );
 		$method = Arr::get( $raw_handler, 1, $default_method );
@@ -103,7 +108,7 @@ class Handler {
 	 * @param  string     $namespace
 	 * @return array|null
 	 */
-	protected function parseFromString( $raw_handler, $default_method, $namespace ) {
+	protected function parseFromString( string $raw_handler, string $default_method, string $namespace ): ?array {
 		return $this->parseFromArray( preg_split( '/@|::/', $raw_handler, 2 ), $default_method, $namespace );
 	}
 
@@ -112,7 +117,7 @@ class Handler {
 	 *
 	 * @return array|Closure
 	 */
-	public function get() {
+	public function get(): array|Closure|null {
 		return $this->handler;
 	}
 
@@ -121,7 +126,7 @@ class Handler {
 	 *
 	 * @return object
 	 */
-	public function make() {
+	public function make(): object {
 		$handler = $this->get();
 
 		if ( $handler instanceof Closure ) {
@@ -150,14 +155,20 @@ class Handler {
 	 * @param  mixed ,...$arguments
 	 * @return mixed
 	 */
-	public function execute() {
-		$arguments = func_get_args();
+	public function execute( ...$arguments ): mixed {
 		$instance = $this->make();
 
 		if ( $instance instanceof Closure ) {
-			return call_user_func_array( $instance, $arguments );
+			return $instance( ...$arguments );
 		}
 
-		return call_user_func_array( [$instance, $this->get()['method']], $arguments );
+		/** @psalm-suppress UndefinedMethod */
+		$method = $this->get()['method'] ?? null;
+
+		if ( null === $method ) {
+			throw new \RuntimeException( 'Method not found in instance.' );
+		}
+
+		return $instance->$method( ...$arguments );
 	}
 }
