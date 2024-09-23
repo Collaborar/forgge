@@ -20,25 +20,25 @@ class Application {
 	/**
 	 * Flag whether to intercept and render configuration exceptions.
 	 *
-	 * @varbool
+	 * @var bool
 	 */
-	protected $render_config_exceptions = true;
+	protected bool $render_config_exceptions = true;
 
 	/**
 	 * Flag whether the application has been bootstrapped.
 	 *
-	 * @varbool
+	 * @var bool
 	 */
-	protected $bootstrapped = false;
+	protected bool $bootstrapped = false;
 
 	/**
 	 * Make a new application instance.
 	 *
 	 * @codeCoverageIgnore
-	 * @return static
+	 * @return self
 	 */
-	public static function make() {
-		return new static( new Container() );
+	public static function make(): Application {
+		return new self( new Container() );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Application {
 	 * @param Container $container
 	 * @parambool   $render_config_exceptions
 	 */
-	public function __construct( Container $container, $render_config_exceptions = true ) {
+	public function __construct( Container $container, bool $render_config_exceptions = true ) {
 		$this->setContainer( $container );
 		$this->container()[ FORGGE_APPLICATION_KEY ] = $this;
 		$this->render_config_exceptions = $render_config_exceptions;
@@ -58,7 +58,7 @@ class Application {
 	 *
 	 * @returnbool
 	 */
-	public function isBootstrapped() {
+	public function isBootstrapped(): bool {
 		return $this->bootstrapped;
 	}
 
@@ -69,7 +69,7 @@ class Application {
 	 * @param bool $run
 	 * @return void
 	 */
-	public function bootstrap( $config = [], $run = true ) {
+	public function bootstrap( array $config = [], bool $run = true ): void {
 		if ( $this->isBootstrapped() ) {
 			throw new ConfigurationException( static::class . ' already bootstrapped.' );
 		}
@@ -98,7 +98,7 @@ class Application {
 	 * @param  array     $config
 	 * @return void
 	 */
-	protected function loadConfig( Container $container, $config ) {
+	protected function loadConfig( Container $container, array $config ): void {
 		$container[ FORGGE_CONFIG_KEY ] = $config;
 	}
 
@@ -108,7 +108,7 @@ class Application {
 	 * @codeCoverageIgnore
 	 * @return void
 	 */
-	protected function loadRoutes() {
+	protected function loadRoutes(): void {
 		if ( wp_doing_ajax() ) {
 			$this->loadRoutesGroup( 'ajax' );
 			return;
@@ -126,10 +126,10 @@ class Application {
 	 * Load a route group applying default attributes, if any.
 	 *
 	 * @codeCoverageIgnore
-	 * @param  string $group
+	 * @param  'web'|'ajax'|'admin' $group
 	 * @return void
 	 */
-	protected function loadRoutesGroup( $group ) {
+	protected function loadRoutesGroup( string $group ): void {
 		$config = $this->resolve( FORGGE_CONFIG_KEY );
 		$file = Arr::get( $config, 'routes.' . $group . '.definitions', '' );
 		$attributes = Arr::get( $config, 'routes.' . $group . '.attributes', [] );
@@ -157,7 +157,7 @@ class Application {
 	 * @param  Closure $action
 	 * @return void
 	 */
-	public function renderConfigExceptions( Closure $action ) {
+	public function renderConfigExceptions( Closure $action ): void {
 		try {
 			$action();
 		} catch ( ConfigurationException $exception ) {

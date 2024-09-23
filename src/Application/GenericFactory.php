@@ -15,7 +15,7 @@ class GenericFactory {
 	 *
 	 * @var Container
 	 */
-	protected $container = null;
+	protected ?Container $container = null;
 
 	/**
 	 * Constructor.
@@ -32,9 +32,9 @@ class GenericFactory {
 	 *
 	 * @throws ClassNotFoundException
 	 * @param  string $class
-	 * @return object
+	 * @return mixed
 	 */
-	public function make( $class ) {
+	public function make( string $class ): mixed {
 		if ( isset( $this->container[ $class ] ) ) {
 			return $this->container[ $class ];
 		}

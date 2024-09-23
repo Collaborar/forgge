@@ -30,21 +30,19 @@ class ApplicationServiceProvider implements ServiceProviderInterface {
 			'path' => $cache_dir,
 		] );
 
-		$container[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] = function ( $c ) {
-			return new GenericFactory( $c );
-		};
+		$container[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] = fn ( Container $c ): GenericFactory =>
+			new GenericFactory( $c );
 
-		$container[ FORGGE_APPLICATION_CLOSURE_FACTORY_KEY ] = function ( $c ) {
-			return new ClosureFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
-		};
+		$container[ FORGGE_APPLICATION_CLOSURE_FACTORY_KEY ] = fn ( Container $c ): ClosureFactory =>
+			new ClosureFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
 
-		$container[ FORGGE_HELPERS_HANDLER_FACTORY_KEY ] = function ( $c ) {
-			return new HandlerFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
-		};
+		$container[ FORGGE_HELPERS_HANDLER_FACTORY_KEY ] = fn ( Container $c ): HandlerFactory =>
+			new HandlerFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
 
-		$container[ FORGGE_APPLICATION_FILESYSTEM_KEY ] = function ( $c ) {
+		$container[ FORGGE_APPLICATION_FILESYSTEM_KEY ] = function ( $c ): object {
 			global $wp_filesystem;
 
+			/** @psalm-suppress MissingFile */
 			require_once ABSPATH . '/wp-admin/includes/file.php';
 
 			WP_Filesystem();

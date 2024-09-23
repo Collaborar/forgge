@@ -14,7 +14,7 @@ trait HasContainerTrait {
 	 *
 	 * @var Container
 	 */
-	protected $container = null;
+	protected ?Container $container = null;
 
 	/**
 	 * Get the IoC container instance.
@@ -22,7 +22,7 @@ trait HasContainerTrait {
 	 * @codeCoverageIgnore
 	 * @return Container
 	 */
-	public function container() {
+	public function container(): ?Container {
 		return $this->container;
 	}
 
@@ -33,7 +33,7 @@ trait HasContainerTrait {
 	 * @param  Container $container
 	 * @return void
 	 */
-	public function setContainer( $container ) {
+	public function setContainer( Container $container ): void {
 		$this->container = $container;
 	}
 
@@ -43,7 +43,7 @@ trait HasContainerTrait {
 	 * @param  string     $key
 	 * @return mixed|null
 	 */
-	public function resolve( $key ) {
+	public function resolve( string $key ): mixed {
 		if ( ! isset( $this->container()[ $key ] ) ) {
 			return null;
 		}

@@ -26,9 +26,9 @@ trait LoadsServiceProvidersTrait {
 	/**
 	 * Array of default service providers.
 	 *
-	 * @var string[]
+	 * @var ServiceProviderInterface[]
 	 */
-	protected $service_providers = [
+	protected array $service_providers = [
 		ApplicationServiceProvider::class,
 		KernelsServiceProvider::class,
 		ExceptionsServiceProvider::class,
@@ -50,13 +50,13 @@ trait LoadsServiceProvidersTrait {
 	 * @param  Container $container
 	 * @return void
 	 */
-	protected function loadServiceProviders( Container $container ) {
+	protected function loadServiceProviders( Container $container ): void {
 		$container[ FORGGE_SERVICE_PROVIDERS_KEY ] = array_merge(
 			$this->service_providers,
 			Arr::get( $container[ FORGGE_CONFIG_KEY ], 'providers', [] )
 		);
 
-		$service_providers = array_map( function ( $service_provider ) use ( $container ) {
+		$service_providers = array_map( function ( string $service_provider ) use ( $container ): mixed {
 			if ( ! is_subclass_of( $service_provider, ServiceProviderInterface::class ) ) {
 				throw new ConfigurationException(
 					'The following class is not defined or does not implement ' .
@@ -83,7 +83,7 @@ trait LoadsServiceProvidersTrait {
 	 * @param  Container                  $container
 	 * @return void
 	 */
-	protected function registerServiceProviders( $service_providers, Container $container ) {
+	protected function registerServiceProviders( array $service_providers, Container $container ): void {
 		foreach ( $service_providers as $provider ) {
 			$provider->register( $container );
 		}
@@ -96,7 +96,7 @@ trait LoadsServiceProvidersTrait {
 	 * @param  Container                  $container
 	 * @return void
 	 */
-	protected function bootstrapServiceProviders( $service_providers, Container $container ) {
+	protected function bootstrapServiceProviders( array $service_providers, Container $container ): void {
 		foreach ( $service_providers as $provider ) {
 			$provider->bootstrap( $container );
 		}
