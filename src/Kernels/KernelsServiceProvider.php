@@ -41,7 +41,7 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 
 		$this->extendConfig( $container, 'middleware_priority', [] );
 
-		$container[ FORGGE_WORDPRESS_HTTP_KERNEL_KEY ] = function ( $c ) {
+		$container[ FORGGE_WORDPRESS_HTTP_KERNEL_KEY ] = function ( Container $c ): HttpKernel {
 			$kernel = new HttpKernel(
 				$c,
 				$c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ],
@@ -62,9 +62,9 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 
 		$app = $container[ FORGGE_APPLICATION_KEY ];
 
-		$app->alias( 'run', function () use ( $app ) {
+		$app->alias( 'run', function ( ...$parameters ) use ( $app ) {
 			$kernel = $app->resolve( FORGGE_WORDPRESS_HTTP_KERNEL_KEY );
-			return call_user_func_array( [$kernel, 'run'], func_get_args() );
+			return $kernel->run( ...$parameters );
 		} );
 	}
 

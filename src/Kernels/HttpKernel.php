@@ -3,6 +3,7 @@
 
 namespace Forgge\Kernels;
 
+use Closure;
 use Exception;
 use Pimple\Container;
 use Psr\Http\Message\ResponseInterface;
@@ -38,63 +39,63 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @var Container
 	 */
-	protected $container = null;
+	protected ?Container $container = null;
 
 	/**
 	 * Injection factory.
 	 *
 	 * @var GenericFactory
 	 */
-	protected $factory = null;
+	protected ?GenericFactory $factory = null;
 
 	/**
 	 * Handler factory.
 	 *
 	 * @var HandlerFactory
 	 */
-	protected $handler_factory = null;
+	protected ?HandlerFactory $handler_factory = null;
 
 	/**
 	 * Response service.
 	 *
 	 * @var ResponseService
 	 */
-	protected $response_service = null;
+	protected ?ResponseService $response_service = null;
 
 	/**
 	 * Request.
 	 *
 	 * @var RequestInterface
 	 */
-	protected $request = null;
+	protected ?RequestInterface $request = null;
 
 	/**
 	 * Router.
 	 *
 	 * @var Router
 	 */
-	protected $router = null;
+	protected ?Router $router = null;
 
 	/**
 	 * View Service.
 	 *
 	 * @var ViewService
 	 */
-	protected $view_service = null;
+	protected ?ViewService $view_service = null;
 
 	/**
 	 * Error handler.
 	 *
 	 * @var ErrorHandlerInterface
 	 */
-	protected $error_handler = null;
+	protected ?ErrorHandlerInterface $error_handler = null;
 
 	/**
 	 * Template WordPress attempted to load.
 	 *
 	 * @var string
 	 */
-	protected $template = '';
+	protected string $template = '';
 
 	/**
 	 * Constructor.
@@ -135,7 +136,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @codeCoverageIgnore
 	 * @return ResponseInterface|null
 	 */
-	protected function getResponse() {
+	protected function getResponse(): ?ResponseInterface {
 		return isset( $this->container[ FORGGE_RESPONSE_KEY ] ) ? $this->container[ FORGGE_RESPONSE_KEY ] : null;
 	}
 
@@ -145,7 +146,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @codeCoverageIgnore
 	 * @return ResponseService
 	 */
-	protected function getResponseService() {
+	protected function getResponseService(): ?ResponseService {
 		return $this->response_service;
 	}
 
@@ -156,7 +157,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @param  string $class
 	 * @return object
 	 */
-	protected function makeMiddleware( $class ) {
+	protected function makeMiddleware( string $class ): object {
 		return $this->factory->make( $class );
 	}
 
@@ -167,8 +168,8 @@ class HttpKernel implements HttpKernelInterface {
 	 * @param  array             $arguments
 	 * @return ResponseInterface
 	 */
-	protected function executeHandler( Handler $handler, $arguments = [] ) {
-		$response = call_user_func_array( [$handler, 'execute'], array_values( $arguments ) );
+	protected function executeHandler( Handler $handler, array $arguments = [] ): ResponseInterface {
+		$response = $handler->execute( array_values( $arguments ) );
 		$response = $this->toResponse( $response );
 
 		if ( ! $response instanceof ResponseInterface ) {
@@ -184,7 +185,12 @@ class HttpKernel implements HttpKernelInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function run( RequestInterface $request, $middleware, $handler, $arguments = [] ) {
+	public function run(
+		RequestInterface $request,
+		array $middleware,
+		string|Closure|Handler $handler,
+		array $arguments = []
+	): ResponseInterface {
 		$this->error_handler->register();
 
 		try {
@@ -210,7 +216,7 @@ class HttpKernel implements HttpKernelInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function handle( RequestInterface $request, $arguments = [] ) {
+	public function handle( RequestInterface $request, array $arguments = [] ): ?ResponseInterface {
 		$route = $this->router->execute( $request );
 
 		if ( $route === null ) {
@@ -244,7 +250,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return void
 	 */
-	public function respond() {
+	public function respond(): void {
 		$response = $this->getResponse();
 
 		if ( ! $response instanceof ResponseInterface ) {
@@ -259,7 +265,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return void
 	 */
-	public function compose() {
+	public function compose(): void {
 		$view = $this->view_service->make( $this->template );
 
 		echo $view->toString();
@@ -269,7 +275,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * {@inheritDoc}
 	 * @codeCoverageIgnore
 	 */
-	public function bootstrap() {
+	public function bootstrap(): void {
 		// Web. Use 3100 so it's high enough and has uncommonly used numbers
 		// before and after. For example, 1000 is too common and it would have 999 before it
 		// which is too common as well.).
@@ -289,7 +295,8 @@ class HttpKernel implements HttpKernelInterface {
 	 * @param  array $query_vars
 	 * @return array
 	 */
-	public function filterRequest( $query_vars ) {
+	public function filterRequest( array $query_vars ): array {
+		/** @var \Forgge\Routing\RouteInterface */
 		$routes = $this->router->getRoutes();
 
 		foreach ( $routes as $route ) {
@@ -301,6 +308,7 @@ class HttpKernel implements HttpKernelInterface {
 				continue;
 			}
 
+			/** @var \Forgge\Application\Application */
 			$this->container[ FORGGE_APPLICATION_KEY ]
 				->renderConfigExceptions( function () use ( $route, &$query_vars ) {
 					$query_vars = $route->applyQueryFilter( $this->request, $query_vars );
@@ -317,7 +325,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @param  string $template
 	 * @return string
 	 */
-	public function filterTemplateInclude( $template ) {
+	public function filterTemplateInclude( string $template ): string {
 		/** @var WP_Query $wp_query */
 		global $wp_query;
 
@@ -353,7 +361,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return void
 	 */
-	public function registerAjaxAction() {
+	public function registerAjaxAction(): void {
 		if ( ! wp_doing_ajax() ) {
 			return;
 		}
@@ -370,7 +378,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return void
 	 */
-	public function actionAjax() {
+	public function actionAjax(): void {
 		$response = $this->handle( $this->request, [''] );
 
 		if ( ! $response instanceof ResponseInterface ) {
@@ -388,7 +396,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return string
 	 */
-	protected function getAdminPageHook() {
+	protected function getAdminPageHook(): string {
 		global $pagenow, $typenow, $plugin_page;
 
 		$page_hook = '';
@@ -413,7 +421,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @param  string $page_hook
 	 * @return string
 	 */
-	protected function getAdminHook( $page_hook ) {
+	protected function getAdminHook( $page_hook ): string {
 		global $pagenow, $plugin_page;
 
 		if ( ! empty( $page_hook ) ) {
@@ -436,7 +444,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return void
 	 */
-	public function registerAdminAction() {
+	public function registerAdminAction(): void {
 		$page_hook = $this->getAdminPageHook();
 		$hook_suffix = $this->getAdminHook( $page_hook );
 
@@ -449,7 +457,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return void
 	 */
-	public function actionAdminLoad() {
+	public function actionAdminLoad(): void {
 		$response = $this->handle( $this->request, [''] );
 
 		if ( ! $response instanceof ResponseInterface ) {
@@ -466,7 +474,7 @@ class HttpKernel implements HttpKernelInterface {
 	 *
 	 * @return void
 	 */
-	public function actionAdmin() {
+	public function actionAdmin(): void {
 		$response = $this->getResponse();
 
 		if ( ! $response instanceof ResponseInterface ) {
