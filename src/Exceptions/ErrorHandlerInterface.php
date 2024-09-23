@@ -13,14 +13,14 @@ interface ErrorHandlerInterface {
 	 *
 	 * @return void
 	 */
-	public function register();
+	public function register(): void;
 
 	/**
 	 * Unregister any registered error, exception and shutdown handlers.
 	 *
 	 * @return void
 	 */
-	public function unregister();
+	public function unregister(): void;
 
 	/**
 	 * Get a response representing the specified exception.
@@ -29,5 +29,5 @@ interface ErrorHandlerInterface {
 	 * @param  PhpException      $exception
 	 * @return ResponseInterface
 	 */
-	public function getResponse( RequestInterface $request, PhpException $exception );
+	public function getResponse( RequestInterface $request, PhpException $exception ): ResponseInterface;
 }
