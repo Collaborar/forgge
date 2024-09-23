@@ -15,7 +15,7 @@ class OldInputMiddleware {
 	 *
 	 * @var OldInput
 	 */
-	protected $old_input = null;
+	protected ?OldInput $old_input = null;
 
 	/**
 	 * Constructor.
@@ -30,7 +30,7 @@ class OldInputMiddleware {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function handle( RequestInterface $request, Closure $next ) {
+	public function handle( RequestInterface $request, Closure $next ): RequestInterface {
 		if ( $this->old_input->enabled() && $request->isPost() ) {
 			$this->old_input->set( $request->body() );
 		}
