@@ -16,7 +16,7 @@ class PostIdCondition implements ConditionInterface, UrlableInterface {
 	 *
 	 * @var int
 	 */
-	protected $post_id = 0;
+	protected int $post_id = 0;
 
 	/**
 	 * Constructor
@@ -24,28 +24,28 @@ class PostIdCondition implements ConditionInterface, UrlableInterface {
 	 * @codeCoverageIgnore
 	 * @param int $post_id
 	 */
-	public function __construct( $post_id ) {
+	public function __construct( int $post_id ) {
 		$this->post_id = (int) $post_id;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSatisfied( RequestInterface $request ) {
+	public function isSatisfied( RequestInterface $request ): bool {
 		return ( is_singular() && $this->post_id === (int) get_the_ID() );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getArguments( RequestInterface $request ) {
+	public function getArguments( RequestInterface $request ): array {
 		return ['post_id' => $this->post_id];
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toUrl( $arguments = [] ) {
-		return get_permalink( $this->post_id );
+	public function toUrl( array $arguments = [] ): string {
+		return (string) get_permalink( $this->post_id );
 	}
 }

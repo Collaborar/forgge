@@ -16,7 +16,7 @@ class PostSlugCondition implements ConditionInterface {
 	 *
 	 * @var string
 	 */
-	protected $post_slug = '';
+	protected string $post_slug = '';
 
 	/**
 	 * Constructor
@@ -24,14 +24,14 @@ class PostSlugCondition implements ConditionInterface {
 	 * @codeCoverageIgnore
 	 * @param string $post_slug
 	 */
-	public function __construct( $post_slug ) {
+	public function __construct( string $post_slug ) {
 		$this->post_slug = $post_slug;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSatisfied( RequestInterface $request ) {
+	public function isSatisfied( RequestInterface $request ): bool {
 		$post = get_post();
 		return ( is_singular() && $post && $this->post_slug === $post->post_name );
 	}
@@ -39,7 +39,7 @@ class PostSlugCondition implements ConditionInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getArguments( RequestInterface $request ) {
+	public function getArguments( RequestInterface $request ): array {
 		return ['post_slug' => $this->post_slug];
 	}
 }

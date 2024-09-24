@@ -16,7 +16,7 @@ class PostStatusCondition implements ConditionInterface {
 	 *
 	 * @var string
 	 */
-	protected $post_status = '';
+	protected string $post_status = '';
 
 	/**
 	 * Constructor
@@ -24,14 +24,14 @@ class PostStatusCondition implements ConditionInterface {
 	 * @codeCoverageIgnore
 	 * @param string $post_status
 	 */
-	public function __construct( $post_status ) {
+	public function __construct( string $post_status ) {
 		$this->post_status = $post_status;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSatisfied( RequestInterface $request ) {
+	public function isSatisfied( RequestInterface $request ): bool {
 		$post = get_post();
 		return ( is_singular() && $post && $this->post_status === $post->post_status );
 	}
@@ -39,7 +39,7 @@ class PostStatusCondition implements ConditionInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getArguments( RequestInterface $request ) {
+	public function getArguments( RequestInterface $request ): array {
 		return ['post_status' => $this->post_status];
 	}
 }
