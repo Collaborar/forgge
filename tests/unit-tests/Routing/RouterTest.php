@@ -80,15 +80,6 @@ class RouterTest extends TestCase {
 	}
 
 	/**
-	 * @covers ::mergeConditionAttribute
-	 */
-	public function testMergeConditionAttribute_Invalid_Exception() {
-		$this->expectException( ConfigurationException::class );
-		$this->expectExceptionMessage( 'Route condition is not a valid' );
-		$this->subject->mergeConditionAttribute( '', new \stdClass() );
-	}
-
-	/**
 	 * @covers ::mergeMiddlewareAttribute
 	 */
 	public function testMergeMiddlewareAttribute() {

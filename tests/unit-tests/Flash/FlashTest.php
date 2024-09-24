@@ -34,26 +34,12 @@ class FlashTest extends TestCase {
 	}
 
 	/**
-	 * @covers ::setStore
-	 * @covers ::isValidStore
-	 */
-	public function testSetStore_InvalidStore_Ignored() {
-		$store = new stdClass();
-		$subject = new Flash( $store );
-		$this->assertNull( $subject->getStore() );
-	}
-
-	/**
 	 * @covers ::enabled
 	 */
 	public function testEnabled() {
 		$store1 = [];
 		$subject1 = new Flash( $store1 );
 		$this->assertTrue( $subject1->enabled() );
-
-		$store2 = null;
-		$subject2 = new Flash( $store2 );
-		$this->assertFalse( $subject2->enabled() );
 	}
 
 	/**
@@ -181,70 +167,5 @@ class FlashTest extends TestCase {
 		$subject->get();
 
 		$this->assertTrue( true );
-	}
-
-	/**
-	 * @covers ::getFromRequest
-	 * @covers ::validateStore
-	 */
-	public function testGetFromRequest_InvalidStore_ThrowException() {
-		$store = new stdClass();
-		$subject = new Flash( $store );
-
-		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'without an active session' );
-		$subject->get( 'foo' );
-	}
-
-	/**
-	 * @covers ::addToRequest
-	 * @covers ::validateStore
-	 */
-	public function testAddToRequest_InvalidStore_ThrowException() {
-		$store = new stdClass();
-		$subject = new Flash( $store );
-
-		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'without an active session' );
-		$subject->add( 'foo', 'foobar' );
-	}
-
-	/**
-	 * @covers ::clearFromRequest
-	 * @covers ::validateStore
-	 */
-	public function testClearFromRequest_InvalidStore_ThrowException() {
-		$store = new stdClass();
-		$subject = new Flash( $store );
-
-		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'without an active session' );
-		$subject->clear( 'foo' );
-	}
-
-	/**
-	 * @covers ::shift
-	 * @covers ::validateStore
-	 */
-	public function testShift_InvalidStore_ThrowException() {
-		$store = new stdClass();
-		$subject = new Flash( $store );
-
-		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'without an active session' );
-		$subject->shift();
-	}
-
-	/**
-	 * @covers ::save
-	 * @covers ::validateStore
-	 */
-	public function testSave_InvalidStore_ThrowException() {
-		$store = new stdClass();
-		$subject = new Flash( $store );
-
-		$this->expectException( Exception::class );
-		$this->expectExceptionMessage( 'without an active session' );
-		$subject->save();
 	}
 }

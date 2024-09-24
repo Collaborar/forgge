@@ -2,6 +2,7 @@
 
 namespace ForggeTests\View;
 
+use Forgge\View\ViewInterface;
 use Mockery;
 use Pimple\Container;
 use Forgge\Application\Application;
@@ -130,7 +131,7 @@ class NameProxyViewEngineTest extends TestCase {
 	 */
 	public function testMake() {
 		$view = 'file.php';
-		$result = 'foobar';
+		$result = Mockery::mock( ViewInterface::class );
 
 		$this->container['engine_mockup'] = function() use ( $view, $result ) {
 			$mock = Mockery::mock();

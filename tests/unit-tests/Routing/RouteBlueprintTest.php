@@ -2,6 +2,7 @@
 
 namespace ForggeTests\Routing;
 
+use Forgge\Routing\Conditions\ConditionInterface;
 use Mockery;
 use Forgge\Routing\RouteBlueprint;
 use Forgge\Routing\RouteInterface;
@@ -23,6 +24,7 @@ class RouteBlueprintTest extends TestCase {
 	public function set_up() {
 		$this->router = Mockery::mock( Router::class )->shouldIgnoreMissing();
 		$this->view_service = Mockery::mock( ViewService::class );
+		$this->condition = Mockery::mock( ConditionInterface::class );
 		$this->subject = Mockery::mock( RouteBlueprint::class, [$this->router, $this->view_service] )->makePartial();
 	}
 

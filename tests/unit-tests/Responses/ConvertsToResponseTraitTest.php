@@ -92,7 +92,7 @@ class ConvertsToResponseTraitImplementation {
 		$this->response_service = $response_service;
 	}
 
-	protected function getResponseService() {
+	protected function getResponseService(): ResponseService {
 		return $this->response_service;
 	}
 

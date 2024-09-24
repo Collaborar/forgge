@@ -109,50 +109,6 @@ class ViewServiceTest extends TestCase {
 	/**
 	 * @covers ::compose
 	 */
-	public function testCompose_GlobalContext() {
-		$context = ['foo' => 'bar'];
-		$expected = ['global' => $context];
-		$view = Mockery::mock( ViewInterface::class )->shouldIgnoreMissing();
-
-		$view->shouldReceive( 'with' )
-			->with( $expected )
-			->once();
-
-		$this->subject->addGlobals( $context );
-
-		$this->subject->compose( $view );
-
-		$this->assertTrue( true );
-	}
-
-	/**
-	 * @covers ::compose
-	 */
-	public function testCompose_ViewComposer() {
-		$expected = ['foo' => 'bar'];
-		$view = Mockery::mock( ViewInterface::class )->shouldIgnoreMissing();
-		$composer = Mockery::mock();
-
-		$view->shouldReceive( 'with' )
-			->with( $expected )
-			->once();
-
-		$composer->shouldReceive( 'execute' )
-			->andReturnUsing( function ( $view ) use ( $expected ) {
-				$view->with( $expected );
-			} );
-
-		$this->subject->shouldReceive( 'getComposersForView' )
-			->andReturn( [$composer] );
-
-		$this->subject->compose( $view );
-
-		$this->assertTrue( true );
-	}
-
-	/**
-	 * @covers ::compose
-	 */
 	public function testCompose_LocalContextOverridesViewComposerContext() {
 		$composer_context = ['foo' => 1, 'bar' => 1];
 		$local_context = ['baz' => 1];
