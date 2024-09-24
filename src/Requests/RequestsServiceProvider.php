@@ -16,9 +16,7 @@ class RequestsServiceProvider implements ServiceProviderInterface {
 	 * {@inheritDoc}
 	 */
 	public function register( Container $container ): void {
-		$container[ FORGGE_REQUEST_KEY ] = function () {
-			return Request::fromGlobals();
-		};
+		$container[ FORGGE_REQUEST_KEY ] = fn (): Request => Request::fromGlobals();
 	}
 
 	/**

@@ -38,14 +38,14 @@ class Request extends ServerRequest implements RequestInterface {
 	 * @codeCoverageIgnore
 	 * {@inheritDoc}
 	 */
-	public function getUrl() {
-		return $this->getUri();
+	public function getUrl(): string {
+		return $this->getUri()->__tostring();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getMethodOverride( $default ) {
+	protected function getMethodOverride( string $default ): string {
 		$valid_overrides = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
 		$override = $default;
 
@@ -82,63 +82,63 @@ class Request extends ServerRequest implements RequestInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isGet() {
+	public function isGet(): bool {
 		return $this->getMethod() === 'GET';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isHead() {
+	public function isHead(): bool {
 		return $this->getMethod() === 'HEAD';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isPost() {
+	public function isPost(): bool {
 		return $this->getMethod() === 'POST';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isPut() {
+	public function isPut(): bool {
 		return $this->getMethod() === 'PUT';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isPatch() {
+	public function isPatch(): bool {
 		return $this->getMethod() === 'PATCH';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isDelete() {
+	public function isDelete(): bool {
 		return $this->getMethod() === 'DELETE';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isOptions() {
+	public function isOptions(): bool {
 		return $this->getMethod() === 'OPTIONS';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isReadVerb() {
+	public function isReadVerb(): bool {
 		return in_array( $this->getMethod(), ['GET', 'HEAD', 'OPTIONS'] );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isAjax() {
+	public function isAjax(): bool {
 		return strtolower( $this->getHeaderLine( 'X-Requested-With' ) ) === 'xmlhttprequest';
 	}
 
@@ -150,7 +150,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	protected function get( $source, $key = '', $default = null ) {
+	protected function get( ?array $source, string $key = '', mixed $default = null ): mixed {
 		if ( empty( $key ) ) {
 			return $source;
 		}
@@ -162,7 +162,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * {@inheritDoc}
 	 * @see ::get()
 	 */
-	public function attributes( $key = '', $default = null ) {
+	public function attributes( string $key = '', mixed $default = null ): mixed {
 		return call_user_func( [$this, 'get'], $this->getAttributes(), $key, $default );
 	}
 
@@ -170,7 +170,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * {@inheritDoc}
 	 * @see ::get()
 	 */
-	public function query( $key = '', $default = null ) {
+	public function query( string $key = '', mixed $default = null ): mixed {
 		return call_user_func( [$this, 'get'], $this->getQueryParams(), $key, $default );
 	}
 
@@ -178,7 +178,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * {@inheritDoc}
 	 * @see ::get()
 	 */
-	public function body( $key = '', $default = null ) {
+	public function body( string $key = '', mixed $default = null ): mixed {
 		return call_user_func( [$this, 'get'], $this->getParsedBody(), $key, $default );
 	}
 
@@ -186,7 +186,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * {@inheritDoc}
 	 * @see ::get()
 	 */
-	public function cookies( $key = '', $default = null ) {
+	public function cookies( string $key = '', mixed $default = null ): mixed {
 		return call_user_func( [$this, 'get'], $this->getCookieParams(), $key, $default );
 	}
 
@@ -194,7 +194,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * {@inheritDoc}
 	 * @see ::get()
 	 */
-	public function files( $key = '', $default = null ) {
+	public function files( string $key = '', mixed $default = null ): mixed {
 		return call_user_func( [$this, 'get'], $this->getUploadedFiles(), $key, $default );
 	}
 
@@ -202,7 +202,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * {@inheritDoc}
 	 * @see ::get()
 	 */
-	public function server( $key = '', $default = null ) {
+	public function server( string $key = '', mixed $default = null ): mixed {
 		return call_user_func( [$this, 'get'], $this->getServerParams(), $key, $default );
 	}
 
@@ -210,7 +210,7 @@ class Request extends ServerRequest implements RequestInterface {
 	 * {@inheritDoc}
 	 * @see ::get()
 	 */
-	public function headers( $key = '', $default = null ) {
+	public function headers( string $key = '', mixed $default = null ): mixed {
 		return call_user_func( [$this, 'get'], $this->getHeaders(), $key, $default );
 	}
 }
