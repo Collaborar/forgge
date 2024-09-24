@@ -12,7 +12,7 @@ interface HasRoutesInterface {
 	 *
 	 * @return RouteInterface[]
 	 */
-	public function getRoutes();
+	public function getRoutes(): array;
 
 	/**
 	 * Add a route.
@@ -20,7 +20,7 @@ interface HasRoutesInterface {
 	 * @param  RouteInterface $route
 	 * @return void
 	 */
-	public function addRoute( RouteInterface $route );
+	public function addRoute( RouteInterface $route ): void;
 
 	/**
 	 * Remove a route.
@@ -28,5 +28,5 @@ interface HasRoutesInterface {
 	 * @param  RouteInterface $route
 	 * @return void
 	 */
-	public function removeRoute( RouteInterface $route );
+	public function removeRoute( RouteInterface $route ): void;
 }

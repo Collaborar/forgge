@@ -18,21 +18,21 @@ class PhpView implements ViewInterface {
 	 *
 	 * @var PhpViewEngine
 	 */
-	protected $engine = null;
+	protected ?PhpViewEngine $engine = null;
 
 	/**
 	 * Filepath to view.
 	 *
 	 * @var string
 	 */
-	protected $filepath = '';
+	protected string $filepath = '';
 
 	/**
 	 * Layout to use.
 	 *
 	 * @var ViewInterface|null
 	 */
-	protected $layout = null;
+	protected ?ViewInterface $layout = null;
 
 	/**
 	 * Constructor.
@@ -49,7 +49,7 @@ class PhpView implements ViewInterface {
 	 *
 	 * @return string
 	 */
-	public function getFilepath() {
+	public function getFilepath(): string {
 		return $this->filepath;
 	}
 
@@ -59,7 +59,7 @@ class PhpView implements ViewInterface {
 	 * @param  string $filepath
 	 * @return static $this
 	 */
-	public function setFilepath( $filepath ) {
+	public function setFilepath( $filepath ): self {
 		$this->filepath = $filepath;
 		return $this;
 	}
@@ -69,7 +69,7 @@ class PhpView implements ViewInterface {
 	 *
 	 * @return ViewInterface|null
 	 */
-	public function getLayout() {
+	public function getLayout(): ?ViewInterface {
 		return $this->layout;
 	}
 
@@ -79,7 +79,7 @@ class PhpView implements ViewInterface {
 	 * @param  ViewInterface|null $layout
 	 * @return static             $this
 	 */
-	public function setLayout( $layout ) {
+	public function setLayout( ?ViewInterface $layout ): self {
 		$this->layout = $layout;
 		return $this;
 	}
@@ -88,7 +88,7 @@ class PhpView implements ViewInterface {
 	 * {@inheritDoc}
 	 * @throws ViewException
 	 */
-	public function toString() {
+	public function toString(): string {
 		if ( empty( $this->getName() ) ) {
 			throw new ViewException( 'View must have a name.' );
 		}

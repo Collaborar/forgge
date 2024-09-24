@@ -13,5 +13,5 @@ interface ViewEngineInterface extends ViewFinderInterface {
 	 * @param  string[]      $views
 	 * @return ViewInterface
 	 */
-	public function make( $views );
+	public function make( array $views ): ViewInterface;
 }

@@ -14,14 +14,14 @@ interface HasAttributesInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function getAttribute( $attribute, $default = '' );
+	public function getAttribute( string $attribute, mixed $default = '' ): mixed;
 
 	/**
 	 * Get all attributes.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getAttributes();
+	public function getAttributes(): array;
 
 	/**
 	 * Set attribute.
@@ -30,7 +30,7 @@ interface HasAttributesInterface {
 	 * @param  mixed  $value
 	 * @return void
 	 */
-	public function setAttribute( $attribute, $value );
+	public function setAttribute( string $attribute, mixed $value ): void;
 
 	/**
 	 * Fluent alias for setAttribute().
@@ -39,7 +39,7 @@ interface HasAttributesInterface {
 	 * @param  mixed  $value
 	 * @return static $this
 	 */
-	public function attribute( $attribute, $value );
+	public function attribute( string $attribute, mixed $value ): HasAttributesInterface;
 
 	/**
 	 * Set attributes.
@@ -48,7 +48,7 @@ interface HasAttributesInterface {
 	 * @param  array<string, mixed> $attributes
 	 * @return void
 	 */
-	public function setAttributes( $attributes );
+	public function setAttributes( array $attributes ): void;
 
 	/**
 	 * Fluent alias for setAttributes().
@@ -56,5 +56,5 @@ interface HasAttributesInterface {
 	 * @param  array<string, mixed> $attributes
 	 * @return static               $this
 	 */
-	public function attributes( $attributes );
+	public function attributes( array $attributes ): HasAttributesInterface;
 }
