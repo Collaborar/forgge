@@ -296,7 +296,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @return array
 	 */
 	public function filterRequest( array $query_vars ): array {
-		/** @var \Forgge\Routing\RouteInterface */
+		/** @var \Forgge\Routing\RouteInterface[] */
 		$routes = $this->router->getRoutes();
 
 		foreach ( $routes as $route ) {
