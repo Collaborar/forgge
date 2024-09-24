@@ -146,7 +146,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @codeCoverageIgnore
 	 * @return ResponseService
 	 */
-	protected function getResponseService(): ?ResponseService {
+	protected function getResponseService(): ResponseService {
 		return $this->response_service;
 	}
 

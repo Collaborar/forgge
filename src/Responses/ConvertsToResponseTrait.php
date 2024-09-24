@@ -12,7 +12,7 @@ trait ConvertsToResponseTrait {
 	 *
 	 * @return ResponseService
 	 */
-	abstract protected function getResponseService();
+	abstract protected function getResponseService(): ResponseService;
 
 	/**
 	 * Convert a user returned response to a ResponseInterface instance if possible.
@@ -21,7 +21,7 @@ trait ConvertsToResponseTrait {
 	 * @param  mixed $response
 	 * @return mixed
 	 */
-	protected function toResponse( $response ) {
+	protected function toResponse( mixed $response ): mixed {
 		if ( is_string( $response ) ) {
 			return $this->getResponseService()->output( $response );
 		}

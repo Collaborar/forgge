@@ -6,6 +6,7 @@ namespace Forgge\Middleware;
 use Closure;
 use Forgge\Requests\RequestInterface;
 use Forgge\Responses\ResponseService;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Redirect users who do not have a capability to a specific URL.
@@ -30,7 +31,7 @@ class UserCanMiddleware {
 
 	/**
 	 * {@inheritDoc}
-	 * @todo Check and update the return type (it seems to be a RequestInterface)
+	 * @todo Check and update the return type.
 	 */
 	public function handle(
 		RequestInterface $request,
@@ -47,7 +48,7 @@ class UserCanMiddleware {
 			$args[] = $object_id;
 		}
 
-		if ( call_user_func_array( 'current_user_can', $args ) ) {
+		if ( current_user_can( ...$args ) ) {
 			return $next( $request );
 		}
 

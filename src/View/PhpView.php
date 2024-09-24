@@ -5,6 +5,7 @@ namespace Forgge\View;
 
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Render a view file with php.
@@ -109,7 +110,7 @@ class PhpView implements ViewInterface {
 	 * {@inheritDoc}
 	 * @throws ViewException
 	 */
-	public function toResponse() {
+	public function toResponse(): ResponseInterface {
 		return (new Response())
 			->withHeader( 'Content-Type', 'text/html' )
 			->withBody( Psr7\Utils::streamFor( $this->toString() ) );
