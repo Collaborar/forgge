@@ -16,7 +16,7 @@ class UserLoggedOutMiddleware {
 	 *
 	 * @var ResponseService
 	 */
-	protected $response_service = null;
+	protected ?ResponseService $response_service = null;
 
 	/**
 	 * Constructor.
@@ -31,7 +31,7 @@ class UserLoggedOutMiddleware {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function handle( RequestInterface $request, Closure $next, $url = '' ) {
+	public function handle( RequestInterface $request, Closure $next, string $url = '' ): mixed {
 		if ( ! is_user_logged_in() ) {
 			return $next( $request );
 		}

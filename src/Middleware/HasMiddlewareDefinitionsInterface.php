@@ -14,7 +14,7 @@ interface HasMiddlewareDefinitionsInterface {
 	 * @param  array<string, string> $middleware
 	 * @return void
 	 */
-	public function setMiddleware( $middleware );
+	public function setMiddleware( array $middleware ): void;
 
 	/**
 	 * Register middleware groups.
@@ -23,7 +23,7 @@ interface HasMiddlewareDefinitionsInterface {
 	 * @param  array<string, string[]> $middleware_groups
 	 * @return void
 	 */
-	public function setMiddlewareGroups( $middleware_groups );
+	public function setMiddlewareGroups( array $middleware_groups ): void;
 
 	/**
 	 * Filter array of middleware into a unique set.
@@ -31,7 +31,7 @@ interface HasMiddlewareDefinitionsInterface {
 	 * @param  array[]  $middleware
 	 * @return string[]
 	 */
-	public function uniqueMiddleware( $middleware );
+	public function uniqueMiddleware( array $middleware ): array;
 
 	/**
 	 * Expand array of middleware into an array of fully qualified class names.
@@ -39,7 +39,7 @@ interface HasMiddlewareDefinitionsInterface {
 	 * @param  string[] $middleware
 	 * @return array[]
 	 */
-	public function expandMiddleware( $middleware );
+	public function expandMiddleware( array $middleware ): array;
 
 	/**
 	 * Expand a middleware group into an array of fully qualified class names.
@@ -47,7 +47,7 @@ interface HasMiddlewareDefinitionsInterface {
 	 * @param  string  $group
 	 * @return array[]
 	 */
-	public function expandMiddlewareGroup( $group );
+	public function expandMiddlewareGroup( string $group ): array;
 
 	/**
 	 * Expand middleware into an array of fully qualified class names and any companion arguments.
@@ -55,7 +55,7 @@ interface HasMiddlewareDefinitionsInterface {
 	 * @param  string  $middleware
 	 * @return array[]
 	 */
-	public function expandMiddlewareMolecule( $middleware );
+	public function expandMiddlewareMolecule( string $middleware ): array;
 
 	/**
 	 * Expand a single middleware a fully qualified class name.
@@ -63,5 +63,5 @@ interface HasMiddlewareDefinitionsInterface {
 	 * @param  string $middleware
 	 * @return string
 	 */
-	public function expandMiddlewareAtom( $middleware );
+	public function expandMiddlewareAtom( string $middleware ): string;
 }

@@ -36,7 +36,7 @@ class RedirectResponse extends Psr7Response {
 	 * @param  int           $status
 	 * @return ResponseInterface
 	 */
-	public function to( $url, $status = 302 ) {
+	public function to( $url, $status = 302 ): ResponseInterface {
 		return $this
 			->withHeader( 'Location', $url )
 			->withStatus( $status );

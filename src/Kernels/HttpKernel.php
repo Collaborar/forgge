@@ -421,7 +421,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @param  string $page_hook
 	 * @return string
 	 */
-	protected function getAdminHook( $page_hook ): string {
+	protected function getAdminHook( string $page_hook ): string {
 		global $pagenow, $plugin_page;
 
 		if ( ! empty( $page_hook ) ) {
