@@ -5,6 +5,7 @@ namespace Forgge\Flash;
 
 use Closure;
 use Forgge\Requests\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Store current request data and clear old request data
@@ -15,7 +16,7 @@ class FlashMiddleware {
 	 *
 	 * @var Flash
 	 */
-	protected $flash = null;
+	protected ?Flash $flash = null;
 
 	/**
 	 * Constructor.
@@ -30,7 +31,7 @@ class FlashMiddleware {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function handle( RequestInterface $request, Closure $next ) {
+	public function handle( RequestInterface $request, Closure $next ): RequestInterface {
 		$response = $next( $request );
 
 		if ( $this->flash->enabled() ) {

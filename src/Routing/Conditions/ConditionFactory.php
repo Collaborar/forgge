@@ -19,7 +19,7 @@ class ConditionFactory {
 	 *
 	 * @var array<string, string>
 	 */
-	protected $condition_types = [];
+	protected array $condition_types = [];
 
 	/**
 	 * Constructor.
@@ -27,7 +27,7 @@ class ConditionFactory {
 	 * @codeCoverageIgnore
 	 * @param array<string, string> $condition_types
 	 */
-	public function __construct( $condition_types ) {
+	public function __construct( array $condition_types ) {
 		$this->condition_types = $condition_types;
 	}
 
@@ -37,7 +37,7 @@ class ConditionFactory {
 	 * @param  string|array|Closure $options
 	 * @return ConditionInterface
 	 */
-	public function make( $options ) {
+	public function make( string|array|Closure $options ): ConditionInterface {
 		if ( is_string( $options ) ) {
 			return $this->makeFromUrl( $options );
 		}
@@ -59,7 +59,7 @@ class ConditionFactory {
 	 * @param  string|array|Closure|ConditionInterface $value
 	 * @return ConditionInterface
 	 */
-	public function condition( $value ) {
+	public function condition( string|array|Closure|ConditionInterface $value ): ConditionInterface {
 		if ( $value instanceof ConditionInterface ) {
 			return $value;
 		}
@@ -73,7 +73,7 @@ class ConditionFactory {
 	 * @param  string      $condition_type
 	 * @return string|null
 	 */
-	protected function getConditionTypeClass( $condition_type ) {
+	protected function getConditionTypeClass( string $condition_type ): ?string {
 		if ( ! isset( $this->condition_types[ $condition_type ] ) ) {
 			return null;
 		}
@@ -85,9 +85,9 @@ class ConditionFactory {
 	 * Check if the passed argument is a registered condition type.
 	 *
 	 * @param  mixed   $condition_type
-	 * @returnbool
+	 * @return bool
 	 */
-	protected function conditionTypeRegistered( $condition_type ) {
+	protected function conditionTypeRegistered( mixed $condition_type ): bool {
 		if ( ! is_string( $condition_type ) ) {
 			return false;
 		}
@@ -101,7 +101,7 @@ class ConditionFactory {
 	 * @param  mixed   $condition
 	 * @returnbool
 	 */
-	protected function isNegatedCondition( $condition ) {
+	protected function isNegatedCondition( mixed $condition ): bool {
 		return (
 			is_string( $condition )
 			&&
@@ -116,7 +116,7 @@ class ConditionFactory {
 	 * @param  array  $arguments
 	 * @return array
 	 */
-	protected function parseNegatedCondition( $type, $arguments ) {
+	protected function parseNegatedCondition( string $type, array $arguments ): array {
 		$negated_type = substr( $type, strlen( static::NEGATE_CONDITION_PREFIX ) );
 		$arguments = array_merge( [ $negated_type ], $arguments );
 
@@ -132,7 +132,7 @@ class ConditionFactory {
 	 * @param  array $options
 	 * @return array
 	 */
-	protected function parseConditionOptions( $options ) {
+	protected function parseConditionOptions( array $options ): array {
 		$type = $options[0];
 		$arguments = array_values( array_slice( $options, 1 ) );
 
@@ -157,7 +157,7 @@ class ConditionFactory {
 	 * @param  string             $url
 	 * @return ConditionInterface
 	 */
-	protected function makeFromUrl( $url ) {
+	protected function makeFromUrl( string $url ): ConditionInterface {
 		return new UrlCondition( $url );
 	}
 
@@ -167,7 +167,7 @@ class ConditionFactory {
 	 * @param  array              $options
 	 * @return ConditionInterface
 	 */
-	protected function makeFromArray( $options ) {
+	protected function makeFromArray( array $options ): ConditionInterface {
 		if ( count( $options ) === 0 ) {
 			throw new ConfigurationException( 'No condition type specified.' );
 		}
@@ -195,8 +195,8 @@ class ConditionFactory {
 	 * @param  array               $options
 	 * @return ConditionInterface
 	 */
-	protected function makeFromArrayOfConditions( $options ) {
-		$conditions = array_map( function ( $condition ) {
+	protected function makeFromArrayOfConditions( array $options ): ConditionInterface {
+		$conditions = array_map( function ( $condition ): ConditionInterface {
 			if ( $condition instanceof ConditionInterface ) {
 				return $condition;
 			}
@@ -212,7 +212,7 @@ class ConditionFactory {
 	 * @param  Closure            $closure
 	 * @return ConditionInterface
 	 */
-	protected function makeFromClosure( Closure $closure ) {
+	protected function makeFromClosure( Closure $closure ): ConditionInterface {
 		return new CustomCondition( $closure );
 	}
 
@@ -223,7 +223,10 @@ class ConditionFactory {
 	 * @param  string|array|Closure|ConditionInterface|null $new
 	 * @return ConditionInterface|null
 	 */
-	public function merge( $old, $new ) {
+	public function merge(
+		string|array|Closure|ConditionInterface|null $old,
+		string|array|Closure|ConditionInterface|null $new
+	): ?ConditionInterface {
 		if ( empty( $old ) ) {
 			if ( empty( $new ) ) {
 				return null;
@@ -244,7 +247,7 @@ class ConditionFactory {
 	 * @param  ConditionInterface $new
 	 * @return ConditionInterface
 	 */
-	public function mergeConditions( ConditionInterface $old, ConditionInterface $new ) {
+	public function mergeConditions( ConditionInterface $old, ConditionInterface $new ): ConditionInterface {
 		if ( $old instanceof UrlCondition && $new instanceof UrlCondition ) {
 			return $old->concatenate( $new->getUrl(), $new->getUrlWhere() );
 		}

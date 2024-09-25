@@ -16,7 +16,7 @@ class RedirectResponse extends Psr7Response {
 	 *
 	 * @var RequestInterface
 	 */
-	protected $request = null;
+	protected ?RequestInterface $request = null;
 
 	/**
 	 * Constructor.
@@ -36,7 +36,7 @@ class RedirectResponse extends Psr7Response {
 	 * @param  int           $status
 	 * @return ResponseInterface
 	 */
-	public function to( $url, $status = 302 ) {
+	public function to( string $url, int $status = 302 ): ResponseInterface {
 		return $this
 			->withHeader( 'Location', $url )
 			->withStatus( $status );
@@ -49,8 +49,8 @@ class RedirectResponse extends Psr7Response {
 	 * @param  int           $status
 	 * @return ResponseInterface
 	 */
-	public function back( $fallback = '', $status = 302 ) {
-		$url = $this->request->getHeaderLine( 'Referer' );
+	public function back( ?string $fallback = '', int $status = 302 ): ResponseInterface {
+		$url = (string) $this->request->getHeaderLine( 'Referer' );
 
 		if ( empty( $url ) ) {
 			$url = $fallback;

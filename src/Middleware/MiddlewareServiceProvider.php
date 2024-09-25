@@ -3,6 +3,7 @@
 
 namespace Forgge\Middleware;
 
+use Pimple\Container;
 use Forgge\ServiceProviders\ServiceProviderInterface;
 
 /**
@@ -14,24 +15,21 @@ class MiddlewareServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
-		$container[ UserLoggedOutMiddleware::class ] = function ( $c ) {
-			return new UserLoggedOutMiddleware( $c[ FORGGE_RESPONSE_SERVICE_KEY ] );
-		};
+	public function register( Container $container ): void {
+		$container[ UserLoggedOutMiddleware::class ] = fn ( Container $c ): UserLoggedOutMiddleware =>
+			new UserLoggedOutMiddleware( $c[ FORGGE_RESPONSE_SERVICE_KEY ] );
 
-		$container[ UserLoggedInMiddleware::class ] = function ( $c ) {
-			return new UserLoggedInMiddleware( $c[ FORGGE_RESPONSE_SERVICE_KEY ] );
-		};
+		$container[ UserLoggedInMiddleware::class ] = fn ( Container $c ): UserLoggedInMiddleware =>
+			new UserLoggedInMiddleware( $c[ FORGGE_RESPONSE_SERVICE_KEY ] );
 
-		$container[ UserCanMiddleware::class ] = function ( $c ) {
-			return new UserCanMiddleware( $c[ FORGGE_RESPONSE_SERVICE_KEY ] );
-		};
+		$container[ UserCanMiddleware::class ] = fn ( Container $c ): UserCanMiddleware =>
+			new UserCanMiddleware( $c[ FORGGE_RESPONSE_SERVICE_KEY ] );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

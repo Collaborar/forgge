@@ -3,6 +3,7 @@
 
 namespace Forgge\Kernels;
 
+use Pimple\Container;
 use Forgge\ServiceProviders\ExtendsConfigTrait;
 use Forgge\ServiceProviders\ServiceProviderInterface;
 
@@ -17,7 +18,7 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		$this->extendConfig( $container, 'middleware', [
 			'flash' => \Forgge\Flash\FlashMiddleware::class,
 			'old_input' => \Forgge\Input\OldInputMiddleware::class,
@@ -40,7 +41,7 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 
 		$this->extendConfig( $container, 'middleware_priority', [] );
 
-		$container[ FORGGE_WORDPRESS_HTTP_KERNEL_KEY ] = function ( $c ) {
+		$container[ FORGGE_WORDPRESS_HTTP_KERNEL_KEY ] = function ( Container $c ): HttpKernel {
 			$kernel = new HttpKernel(
 				$c,
 				$c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ],
@@ -61,16 +62,16 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 
 		$app = $container[ FORGGE_APPLICATION_KEY ];
 
-		$app->alias( 'run', function () use ( $app ) {
+		$app->alias( 'run', function ( ...$parameters ) use ( $app ) {
 			$kernel = $app->resolve( FORGGE_WORDPRESS_HTTP_KERNEL_KEY );
-			return call_user_func_array( [$kernel, 'run'], func_get_args() );
+			return $kernel->run( ...$parameters );
 		} );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

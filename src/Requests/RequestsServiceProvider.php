@@ -3,6 +3,7 @@
 
 namespace Forgge\Requests;
 
+use Pimple\Container;
 use Forgge\ServiceProviders\ServiceProviderInterface;
 
 /**
@@ -14,16 +15,14 @@ class RequestsServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
-		$container[ FORGGE_REQUEST_KEY ] = function () {
-			return Request::fromGlobals();
-		};
+	public function register( Container $container ): void {
+		$container[ FORGGE_REQUEST_KEY ] = fn (): Request => Request::fromGlobals();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

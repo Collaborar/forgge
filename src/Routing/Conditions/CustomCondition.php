@@ -21,7 +21,7 @@ class CustomCondition implements ConditionInterface {
 	 *
 	 * @var array
 	 */
-	protected $arguments = [];
+	protected array $arguments = [];
 
 	/**
 	 * Constructor
@@ -30,7 +30,7 @@ class CustomCondition implements ConditionInterface {
 	 * @param callable $callable
 	 * @param mixed    ,...$arguments
 	 */
-	public function __construct( $callable ) {
+	public function __construct( callable $callable ) {
 		$this->callable = $callable;
 		$this->arguments = array_values( array_slice( func_get_args(), 1 ) );
 	}
@@ -41,21 +41,21 @@ class CustomCondition implements ConditionInterface {
 	 * @codeCoverageIgnore
 	 * @return callable
 	 */
-	public function getCallable() {
+	public function getCallable(): ?callable {
 		return $this->callable;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSatisfied( RequestInterface $request ) {
+	public function isSatisfied( RequestInterface $request ): bool {
 		return call_user_func_array( $this->callable, $this->arguments );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getArguments( RequestInterface $request ) {
+	public function getArguments( RequestInterface $request ): array {
 		return $this->arguments;
 	}
 }

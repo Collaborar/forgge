@@ -15,14 +15,14 @@ class DebugDataProvider {
 	 *
 	 * @var Container
 	 */
-	protected $container = null;
+	protected ?Container $container = null;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param Container $container
 	 */
-	public function __construct( $container ) {
+	public function __construct( Container $container ) {
 		$this->container = $container;
 	}
 
@@ -32,7 +32,7 @@ class DebugDataProvider {
 	 * @param  mixed $value
 	 * @return mixed
 	 */
-	public function toScalar( $value ) {
+	public function toScalar( mixed $value ): mixed {
 		$type = gettype( $value );
 
 		if ( ! is_scalar( $value ) ) {
@@ -48,7 +48,7 @@ class DebugDataProvider {
 	 * @param \Whoops\Exception\Inspector $inspector
 	 * @return array<string, mixed>
 	 */
-	public function route( $inspector ) {
+	public function route( \Whoops\Exception\Inspector $inspector ): array {
 		/** @var \Forgge\Routing\RouteInterface|null $route */
 		$route = $this->container[ FORGGE_ROUTING_ROUTER_KEY ]->getCurrentRoute();
 

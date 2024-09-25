@@ -19,14 +19,14 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 *
 	 * @var string
 	 */
-	protected $url = '';
+	protected string $url = '';
 
 	/**
 	 * URL where.
 	 *
 	 * @var array<string, string>
 	 */
-	protected $url_where = [];
+	protected array $url_where = [];
 
 	/**
 	 * Pattern to detect parameters in urls.
@@ -34,7 +34,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @suppress HtmlUnknownTag
 	 * @var string
 	 */
-	protected $url_pattern = '~
+	protected string $url_pattern = '~
 		(?:/)                     # match leading slash
 		(?:\{)                    # opening curly brace
 			(?P<name>[a-z]\w*)    # string starting with a-z and followed by word characters for the parameter name
@@ -48,7 +48,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 *
 	 * @var string
 	 */
-	protected $parameter_pattern = '[^/]+';
+	protected string $parameter_pattern = '[^/]+';
 
 	/**
 	 * Constructor.
@@ -57,7 +57,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @param string $url
 	 * @param array<string, string> $where
 	 */
-	public function __construct( $url, $where = [] ) {
+	public function __construct( string $url, array $where = [] ) {
 		$this->setUrl( $url );
 		$this->setUrlWhere( $where );
 	}
@@ -70,14 +70,14 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @param array<string, string> $where
 	 * @return self
 	 */
-	protected function make( $url, $where = [] ) {
+	protected function make( string $url, array $where = [] ): UrlCondition {
 		return new self( $url, $where );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function whereIsSatisfied( RequestInterface $request ) {
+	protected function whereIsSatisfied( RequestInterface $request ): bool {
 		$where = $this->getUrlWhere();
 		$arguments = $this->getArguments( $request );
 
@@ -95,7 +95,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSatisfied( RequestInterface $request ) {
+	public function isSatisfied( RequestInterface $request ): bool {
 		if ( $this->getUrl() === static::WILDCARD ) {
 			return true;
 		}
@@ -114,7 +114,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getArguments( RequestInterface $request ) {
+	public function getArguments( RequestInterface $request ): array {
 		$validation_pattern = $this->getValidationPattern( $this->getUrl() );
 		$url = UrlUtility::addTrailingSlash( UrlUtility::getPath( $request ) );
 		$matches = [];
@@ -138,7 +138,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 *
 	 * @return string
 	 */
-	public function getUrl() {
+	public function getUrl(): string {
 		return $this->url;
 	}
 
@@ -148,7 +148,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @param  string $url
 	 * @return void
 	 */
-	public function setUrl( $url ) {
+	public function setUrl( string $url ): void {
 		if ( $url !== static::WILDCARD ) {
 			$url = UrlUtility::addLeadingSlash( UrlUtility::addTrailingSlash( $url ) );
 		}
@@ -159,14 +159,14 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getUrlWhere() {
+	public function getUrlWhere(): array {
 		return $this->url_where;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUrlWhere( $where ) {
+	public function setUrlWhere( array $where ): void {
 		$this->url_where = $where;
 	}
 
@@ -177,7 +177,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @param  array<string, string> $where
 	 * @return static
 	 */
-	public function concatenate( $url, $where = [] ) {
+	public function concatenate( string $url, array $where = [] ): ConditionInterface {
 		if ( $this->getUrl() === static::WILDCARD || $url === static::WILDCARD ) {
 			return $this->make( static::WILDCARD );
 		}
@@ -197,7 +197,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @param  string   $url
 	 * @return string[]
 	 */
-	protected function getParameterNames( $url ) {
+	protected function getParameterNames( string $url ): array {
 		$matches = [];
 		preg_match_all( $this->url_pattern, $url, $matches );
 		return $matches['name'];
@@ -210,7 +210,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @param  array  $parameters
 	 * @return string
 	 */
-	protected function replacePatternParameterWithPlaceholder( $matches, &$parameters ) {
+	protected function replacePatternParameterWithPlaceholder( array $matches, array &$parameters ): string {
 		$name = $matches['name'];
 		$optional = ! empty( $matches['optional'] );
 
@@ -238,7 +238,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	 * @param bool $wrap
 	 * @return string
 	 */
-	public function getValidationPattern( $url, $wrap = true ) {
+	public function getValidationPattern( string $url, bool $wrap = true ): string {
 		$parameters = [];
 
 		// Replace all parameters with placeholders
@@ -269,7 +269,7 @@ class UrlCondition implements ConditionInterface, UrlableInterface, CanFilterQue
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toUrl( $arguments = [] ) {
+	public function toUrl( array $arguments = [] ): string {
 		$url = preg_replace_callback( $this->url_pattern, function ( $matches ) use ( $arguments ) {
 			$name = $matches['name'];
 			$optional = ! empty( $matches['optional'] );

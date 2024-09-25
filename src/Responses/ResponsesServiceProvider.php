@@ -3,6 +3,9 @@
 
 namespace Forgge\Responses;
 
+use Pimple\Container;
+use Forgge\Application\Application;
+use Forgge\Application\ApplicationMixin;
 use Forgge\ServiceProviders\ServiceProviderInterface;
 
 /**
@@ -14,11 +17,11 @@ class ResponsesServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
-		$container[ FORGGE_RESPONSE_SERVICE_KEY ] = function ( $c ) {
-			return new ResponseService( $c[ FORGGE_REQUEST_KEY ], $c[ FORGGE_VIEW_SERVICE_KEY ] );
-		};
+	public function register( Container $container ): void {
+		$container[ FORGGE_RESPONSE_SERVICE_KEY ] = fn ( Container $c ): ResponseService =>
+			new ResponseService( $c[ FORGGE_REQUEST_KEY ], $c[ FORGGE_VIEW_SERVICE_KEY ] );
 
+		/** @var Application|ApplicationMixin */
 		$app = $container[ FORGGE_APPLICATION_KEY ];
 		$app->alias( 'responses', FORGGE_RESPONSE_SERVICE_KEY );
 
@@ -46,7 +49,7 @@ class ResponsesServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

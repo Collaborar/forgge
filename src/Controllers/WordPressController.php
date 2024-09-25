@@ -18,7 +18,7 @@ class WordPressController {
 	 *
 	 * @var ViewService
 	 */
-	protected $view_service = null;
+	protected ?ViewService $view_service = null;
 
 	/**
 	 * Constructor.
@@ -37,7 +37,7 @@ class WordPressController {
 	 * @param  string            $view
 	 * @return ResponseInterface
 	 */
-	public function handle( RequestInterface $request, $view = '' ) {
+	public function handle( RequestInterface $request, string $view = '' ): ResponseInterface {
 		if ( is_admin() || wp_doing_ajax() ) {
 			throw new ConfigurationException(
 				'Attempted to run the default WordPress controller on an ' .

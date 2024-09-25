@@ -14,7 +14,7 @@ interface ViewInterface extends HasContextInterface, ResponsableInterface {
 	 *
 	 * @return string
 	 */
-	public function getName();
+	public function getName(): string;
 
 	/**
 	 * Set name.
@@ -22,12 +22,12 @@ interface ViewInterface extends HasContextInterface, ResponsableInterface {
 	 * @param  string $name
 	 * @return static $this
 	 */
-	public function setName( $name );
+	public function setName( string $name );
 
 	/**
 	 * Render the view to a string.
 	 *
 	 * @return string
 	 */
-	public function toString();
+	public function toString(): string;
 }

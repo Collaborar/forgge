@@ -15,7 +15,7 @@ interface ServiceProviderInterface {
 	 * @param  Container $container
 	 * @return void
 	 */
-	public function register( $container );
+	public function register( Container $container ): void;
 
 	/**
 	 * Bootstrap any services if needed.
@@ -23,5 +23,5 @@ interface ServiceProviderInterface {
 	 * @param  Container $container
 	 * @return void
 	 */
-	public function bootstrap( $container );
+	public function bootstrap( Container $container ): void;
 }

@@ -21,7 +21,7 @@ class ExceptionsServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		$debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
 
 		$this->extendConfig( $container, 'debug', [
@@ -38,23 +38,22 @@ class ExceptionsServiceProvider implements ServiceProviderInterface {
 	 *
 	 * @param Container $container
 	 */
-	protected function registerPrettyErrorHandler( $container ) {
-		$container[ DebugDataProvider::class ] = function ( $container ) {
-			return new DebugDataProvider( $container );
-		};
+	protected function registerPrettyErrorHandler( Container $container ): void {
+		$container[ DebugDataProvider::class ] = fn ( Container $c ): DebugDataProvider =>
+			new DebugDataProvider( $c );
 
-		$container[ PrettyPageHandler::class ] = function ( $container ) {
+		$container[ PrettyPageHandler::class ] = function ( Container $c ): PrettyPageHandler {
 			$handler = new PrettyPageHandler();
 			$handler->addResourcePath( implode( DIRECTORY_SEPARATOR, [FORGGE_DIR, 'src', 'Exceptions', 'Whoops'] ) );
 
-			$handler->addDataTableCallback( 'Forgge: Route', function ( $inspector ) use ( $container ) {
-				return $container[ DebugDataProvider::class ]->route( $inspector );
+			$handler->addDataTableCallback( 'Forgge: Route', function ( $inspector ) use ( $c ) {
+				return $c[ DebugDataProvider::class ]->route( $inspector );
 			} );
 
 			return $handler;
 		};
 
-		$container[ Run::class ] = function ( $container ) {
+		$container[ Run::class ] = function ( Container $c ): ?Run {
 			if ( ! class_exists( Run::class ) ) {
 				return null;
 			}
@@ -62,7 +61,7 @@ class ExceptionsServiceProvider implements ServiceProviderInterface {
 			$run = new Run();
 			$run->allowQuit( false );
 
-			$handler = $container[ PrettyPageHandler::class ];
+			$handler = $c[ PrettyPageHandler::class ];
 
 			if ( $handler ) {
 				$run->pushHandler( $handler );
@@ -77,24 +76,24 @@ class ExceptionsServiceProvider implements ServiceProviderInterface {
 	 *
 	 * @param Container $container
 	 */
-	protected function registerErrorHandler( $container ) {
-		$container[ FORGGE_EXCEPTIONS_ERROR_HANDLER_KEY ] = function ( $container ) {
-			$debug = $container[ FORGGE_CONFIG_KEY ]['debug'];
-			$whoops = $debug['pretty_errors'] ? $container[ Run::class ] : null;
-			return new ErrorHandler( $container[ FORGGE_RESPONSE_SERVICE_KEY ], $whoops, $debug['enable'] );
+	protected function registerErrorHandler( Container $container ): void {
+		$container[ FORGGE_EXCEPTIONS_ERROR_HANDLER_KEY ] = function ( Container $c ): ErrorHandler {
+			$debug = $c[ FORGGE_CONFIG_KEY ]['debug'];
+			$whoops = $debug['pretty_errors'] ? $c[ Run::class ] : null;
+			return new ErrorHandler( $c[ FORGGE_RESPONSE_SERVICE_KEY ], $whoops, $debug['enable'] );
 		};
 
-		$container[ FORGGE_EXCEPTIONS_CONFIGURATION_ERROR_HANDLER_KEY ] = function ( $container ) {
-			$debug = $container[ FORGGE_CONFIG_KEY ]['debug'];
-			$whoops = $debug['pretty_errors'] ? $container[ Run::class ] : null;
-			return new ErrorHandler( $container[ FORGGE_RESPONSE_SERVICE_KEY ], $whoops, $debug['enable'] );
+		$container[ FORGGE_EXCEPTIONS_CONFIGURATION_ERROR_HANDLER_KEY ] = function ( Container $c ): ErrorHandler {
+			$debug = $c[ FORGGE_CONFIG_KEY ]['debug'];
+			$whoops = $debug['pretty_errors'] ? $c[ Run::class ] : null;
+			return new ErrorHandler( $c[ FORGGE_RESPONSE_SERVICE_KEY ], $whoops, $debug['enable'] );
 		};
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

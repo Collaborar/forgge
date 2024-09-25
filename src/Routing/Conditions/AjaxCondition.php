@@ -16,31 +16,31 @@ class AjaxCondition implements ConditionInterface, UrlableInterface {
 	 *
 	 * @var string
 	 */
-	protected $action = '';
+	protected string $action = '';
 
 	/**
 	 * Flag whether to check against ajax actions which run for authenticated users.
 	 *
-	 * @varbool
+	 * @var bool
 	 */
-	protected $private = true;
+	protected bool $private = true;
 
 	/**
 	 * Flag whether to check against ajax actions which run for unauthenticated users.
 	 *
-	 * @varbool
+	 * @var bool
 	 */
-	protected $public = false;
+	protected bool $public = false;
 
 	/**
 	 * Constructor
 	 *
 	 * @codeCoverageIgnore
 	 * @param string  $action
-	 * @parambool $private
-	 * @parambool $public
+	 * @param bool $private
+	 * @param bool $public
 	 */
-	public function __construct( $action, $private = true, $public = false ) {
+	public function __construct( string $action, bool $private = true, bool $public = false ) {
 		$this->action = $action;
 		$this->private = $private;
 		$this->public = $public;
@@ -49,18 +49,18 @@ class AjaxCondition implements ConditionInterface, UrlableInterface {
 	/**
 	 * Check if the private authentication requirement matches.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	protected function matchesPrivateRequirement() {
+	protected function matchesPrivateRequirement(): bool {
 		return $this->private && is_user_logged_in();
 	}
 
 	/**
 	 * Check if the public authentication requirement matches.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	protected function matchesPublicRequirement() {
+	protected function matchesPublicRequirement(): bool {
 		return $this->public && ! is_user_logged_in();
 	}
 
@@ -68,16 +68,16 @@ class AjaxCondition implements ConditionInterface, UrlableInterface {
 	 * Check if the ajax action matches the requirement.
 	 *
 	 * @param  RequestInterface $request
-	 * @returnbool
+	 * @return bool
 	 */
-	protected function matchesActionRequirement( RequestInterface $request ) {
+	protected function matchesActionRequirement( RequestInterface $request ): bool {
 		return $this->action === $request->body( 'action', $request->query( 'action' ) );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSatisfied( RequestInterface $request ) {
+	public function isSatisfied( RequestInterface $request ): bool {
 		if ( ! wp_doing_ajax() ) {
 			return false;
 		}
@@ -92,14 +92,14 @@ class AjaxCondition implements ConditionInterface, UrlableInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getArguments( RequestInterface $request ) {
+	public function getArguments( RequestInterface $request ): array {
 		return ['action' => $this->action];
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toUrl( $arguments = [] ) {
+	public function toUrl( array $arguments = [] ): string {
 		return add_query_arg( 'action', $this->action, self_admin_url( 'admin-ajax.php' ) );
 	}
 }

@@ -19,7 +19,7 @@ class ViewServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		/** @var Container $container */
 		$namespace = $container[ FORGGE_CONFIG_KEY ]['namespace'];
 
@@ -76,7 +76,7 @@ class ViewServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		// Nothing to bootstrap.
 	}
 }

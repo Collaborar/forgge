@@ -6,6 +6,7 @@ namespace Forgge\Middleware;
 use Closure;
 use Forgge\Requests\RequestInterface;
 use Forgge\Responses\ResponseService;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Redirect users who do not have a capability to a specific URL.
@@ -16,7 +17,7 @@ class UserCanMiddleware {
 	 *
 	 * @var ResponseService
 	 */
-	protected $response_service = null;
+	protected ?ResponseService $response_service = null;
 
 	/**
 	 * Constructor.
@@ -30,8 +31,15 @@ class UserCanMiddleware {
 
 	/**
 	 * {@inheritDoc}
+	 * @todo Check and update the return type.
 	 */
-	public function handle( RequestInterface $request, Closure $next, $capability = '', $object_id = '0', $url = '' ) {
+	public function handle(
+		RequestInterface $request,
+		Closure $next,
+		string $capability = '',
+		int|string $object_id = '0',
+		string $url = ''
+	): mixed {
 		$capability = apply_filters( 'forgge.middleware.user.can.capability', $capability, $request );
 		$object_id = apply_filters( 'forgge.middleware.user.can.object_id', (int) $object_id, $capability, $request );
 		$args = [$capability];
@@ -40,7 +48,7 @@ class UserCanMiddleware {
 			$args[] = $object_id;
 		}
 
-		if ( call_user_func_array( 'current_user_can', $args ) ) {
+		if ( current_user_can( ...$args ) ) {
 			return $next( $request );
 		}
 

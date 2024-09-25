@@ -12,7 +12,7 @@ trait SortsMiddlewareTrait {
 	 *
 	 * @var string[]
 	 */
-	protected $middleware_priority = [];
+	protected array $middleware_priority = [];
 
 	/**
 	 * Get middleware execution priority.
@@ -20,7 +20,7 @@ trait SortsMiddlewareTrait {
 	 * @codeCoverageIgnore
 	 * @return string[]
 	 */
-	public function getMiddlewarePriority() {
+	public function getMiddlewarePriority(): array {
 		return $this->middleware_priority;
 	}
 
@@ -31,7 +31,7 @@ trait SortsMiddlewareTrait {
 	 * @param  string[] $middleware_priority
 	 * @return void
 	 */
-	public function setMiddlewarePriority( $middleware_priority ) {
+	public function setMiddlewarePriority( array $middleware_priority ): void {
 		$this->middleware_priority = $middleware_priority;
 	}
 
@@ -43,7 +43,7 @@ trait SortsMiddlewareTrait {
 	 * @param  string|array $middleware
 	 * @return int
 	 */
-	public function getMiddlewarePriorityForMiddleware( $middleware ) {
+	public function getMiddlewarePriorityForMiddleware( string|array $middleware ): int {
 		if ( is_array( $middleware ) ) {
 			$middleware = $middleware[0];
 		}
@@ -59,7 +59,7 @@ trait SortsMiddlewareTrait {
 	 * @param  string[] $middleware
 	 * @return array
 	 */
-	public function sortMiddleware( $middleware ) {
+	public function sortMiddleware( array $middleware ): array {
 		$sorted = $middleware;
 
 		usort( $sorted, function ( $a, $b ) use ( $middleware ) {

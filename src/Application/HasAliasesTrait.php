@@ -19,7 +19,7 @@ trait HasAliasesTrait {
 	 *
 	 * @var array<string, array>
 	 */
-	protected $aliases = [];
+	protected array $aliases = [];
 
 	/**
 	 * Get whether an alias is registered.
@@ -27,7 +27,7 @@ trait HasAliasesTrait {
 	 * @param  string  $alias
 	 * @returnbool
 	 */
-	public function hasAlias( $alias ) {
+	public function hasAlias( string $alias ): bool {
 		return isset( $this->aliases[ $alias ] );
 	}
 
@@ -37,7 +37,7 @@ trait HasAliasesTrait {
 	 * @param  string     $alias
 	 * @return array|null
 	 */
-	public function getAlias( $alias ) {
+	public function getAlias( string $alias ): ?array {
 		if ( ! $this->hasAlias( $alias ) ) {
 			return null;
 		}
@@ -53,7 +53,7 @@ trait HasAliasesTrait {
 	 * @param  array<string, mixed> $alias
 	 * @return void
 	 */
-	public function setAlias( $alias ) {
+	public function setAlias( array $alias ): void {
 		$name = Arr::get( $alias, 'name' );
 
 		$this->aliases[ $name ] = [
@@ -73,7 +73,7 @@ trait HasAliasesTrait {
 	 * @param  string         $method
 	 * @return void
 	 */
-	public function alias( $alias, $target, $method = '' ) {
+	public function alias( string $alias, string|Closure $target, string $method = '' ): void {
 		$this->setAlias( [
 			'name' => $alias,
 			'target' => $target,
@@ -88,24 +88,20 @@ trait HasAliasesTrait {
 	 * @param array  $parameters
 	 * @return mixed
 	 */
-	public function __call( $method, $parameters ) {
+	public function __call( string $method, array $parameters ): mixed {
 		if ( ! $this->hasAlias( $method ) ) {
 			throw new BadMethodCallException( "Method {$method} does not exist." );
 		}
 
 		$alias = $this->aliases[ $method ];
 
-		if ( $alias['target'] instanceof Closure ) {
-			return call_user_func_array( $alias['target']->bindTo( $this, static::class ), $parameters );
-		}
-
-		$target = $this->resolve( $alias['target'] );
-
-		if ( ! empty( $alias['method'] ) ) {
-			return call_user_func_array( [$target, $alias['method']], $parameters );
-		}
-
-		return $target;
+		return match (true) {
+			$alias['target'] instanceof Closure =>
+				call_user_func_array( $alias['target']->bindTo( $this, static::class ), $parameters ),
+			!empty( $alias['method'] ) =>
+				call_user_func_array( [$this->resolve( $alias['target'] ), $alias['method']], $parameters ),
+			default => $this->resolve( $alias['target'] ),
+		};
 	}
 
 	/**
@@ -114,5 +110,5 @@ trait HasAliasesTrait {
 	 * @param  string     $key
 	 * @return mixed|null
 	 */
-	abstract public function resolve( $key );
+	abstract public function resolve( string $key );
 }

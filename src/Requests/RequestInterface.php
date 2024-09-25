@@ -15,70 +15,70 @@ interface RequestInterface extends ServerRequestInterface {
 	 *
 	 * @return string
 	 */
-	public function getUrl();
+	public function getUrl(): string;
 
 	/**
 	 * Check if the request method is GET.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isGet();
+	public function isGet(): bool;
 
 	/**
 	 * Check if the request method is HEAD.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isHead();
+	public function isHead(): bool;
 
 	/**
 	 * Check if the request method is POST.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isPost();
+	public function isPost(): bool;
 
 	/**
 	 * Check if the request method is PUT.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isPut();
+	public function isPut(): bool;
 
 	/**
 	 * Check if the request method is PATCH.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isPatch();
+	public function isPatch(): bool;
 
 	/**
 	 * Check if the request method is DELETE.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isDelete();
+	public function isDelete(): bool;
 
 	/**
 	 * Check if the request method is OPTIONS.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isOptions();
+	public function isOptions(): bool;
 
 	/**
 	 * Check if the request method is a "read" verb.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isReadVerb();
+	public function isReadVerb(): bool;
 
 	/**
 	 * Check if the request is an ajax request.
 	 *
-	 * @returnbool
+	 * @return bool
 	 */
-	public function isAjax();
+	public function isAjax(): bool;
 
 	/**
 	 * Get a value from the request attributes.
@@ -87,7 +87,7 @@ interface RequestInterface extends ServerRequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function attributes( $key = '', $default = null );
+	public function attributes( string $key = '', mixed $default = null ): mixed;
 
 	/**
 	 * Get a value from the request query (i.e. $_GET).
@@ -96,7 +96,7 @@ interface RequestInterface extends ServerRequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function query( $key = '', $default = null );
+	public function query( string $key = '', mixed $default = null ): mixed;
 
 	/**
 	 * Get a value from the request body (i.e. $_POST).
@@ -105,7 +105,7 @@ interface RequestInterface extends ServerRequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function body( $key = '', $default = null );
+	public function body( string $key = '', mixed $default = null ): mixed;
 
 	/**
 	 * Get a value from the COOKIE parameters.
@@ -114,7 +114,7 @@ interface RequestInterface extends ServerRequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function cookies( $key = '', $default = null );
+	public function cookies( string $key = '', mixed $default = null ): mixed;
 
 	/**
 	 * Get a value from the FILES parameters.
@@ -123,7 +123,7 @@ interface RequestInterface extends ServerRequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function files( $key = '', $default = null );
+	public function files( string $key = '', mixed $default = null ): mixed;
 
 	/**
 	 * Get a value from the SERVER parameters.
@@ -132,7 +132,7 @@ interface RequestInterface extends ServerRequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function server( $key = '', $default = null );
+	public function server( string $key = '', mixed $default = null ): mixed;
 
 	/**
 	 * Get a value from the headers.
@@ -141,5 +141,5 @@ interface RequestInterface extends ServerRequestInterface {
 	 * @param  mixed  $default
 	 * @return mixed
 	 */
-	public function headers( $key = '', $default = null );
+	public function headers( string $key = '', mixed $default = null ): mixed;
 }

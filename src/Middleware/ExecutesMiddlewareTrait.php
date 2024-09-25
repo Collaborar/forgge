@@ -17,7 +17,7 @@ trait ExecutesMiddlewareTrait {
 	 * @param  string $class
 	 * @return object
 	 */
-	abstract protected function makeMiddleware( $class );
+	abstract protected function makeMiddleware( string $class ): object;
 
 	/**
 	 * Execute an array of middleware recursively (last in, first out).
@@ -27,7 +27,7 @@ trait ExecutesMiddlewareTrait {
 	 * @param  Closure           $next
 	 * @return ResponseInterface
 	 */
-	protected function executeMiddleware( $middleware, RequestInterface $request, Closure $next ) {
+	protected function executeMiddleware( array $middleware, RequestInterface $request, Closure $next ): ResponseInterface {
 		$top_middleware = array_shift( $middleware );
 
 		if ( $top_middleware === null ) {

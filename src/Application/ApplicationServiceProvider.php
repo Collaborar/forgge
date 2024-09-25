@@ -3,6 +3,7 @@
 
 namespace Forgge\Application;
 
+use Pimple\Container;
 use Forgge\Helpers\HandlerFactory;
 use Forgge\Helpers\MixedType;
 use Forgge\ServiceProviders\ExtendsConfigTrait;
@@ -19,7 +20,7 @@ class ApplicationServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register( $container ) {
+	public function register( Container $container ): void {
 		$this->extendConfig( $container, 'providers', [] );
 		$this->extendConfig( $container, 'namespace', 'App\\' );
 
@@ -29,21 +30,19 @@ class ApplicationServiceProvider implements ServiceProviderInterface {
 			'path' => $cache_dir,
 		] );
 
-		$container[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] = function ( $c ) {
-			return new GenericFactory( $c );
-		};
+		$container[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] = fn ( Container $c ): GenericFactory =>
+			new GenericFactory( $c );
 
-		$container[ FORGGE_APPLICATION_CLOSURE_FACTORY_KEY ] = function ( $c ) {
-			return new ClosureFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
-		};
+		$container[ FORGGE_APPLICATION_CLOSURE_FACTORY_KEY ] = fn ( Container $c ): ClosureFactory =>
+			new ClosureFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
 
-		$container[ FORGGE_HELPERS_HANDLER_FACTORY_KEY ] = function ( $c ) {
-			return new HandlerFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
-		};
+		$container[ FORGGE_HELPERS_HANDLER_FACTORY_KEY ] = fn ( Container $c ): HandlerFactory =>
+			new HandlerFactory( $c[ FORGGE_APPLICATION_GENERIC_FACTORY_KEY ] );
 
-		$container[ FORGGE_APPLICATION_FILESYSTEM_KEY ] = function ( $c ) {
+		$container[ FORGGE_APPLICATION_FILESYSTEM_KEY ] = function ( $c ): object {
 			global $wp_filesystem;
 
+			/** @psalm-suppress MissingFile */
 			require_once ABSPATH . '/wp-admin/includes/file.php';
 
 			WP_Filesystem();
@@ -59,7 +58,7 @@ class ApplicationServiceProvider implements ServiceProviderInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function bootstrap( $container ) {
+	public function bootstrap( Container $container ): void {
 		$cache_dir = $container[ FORGGE_CONFIG_KEY ]['cache']['path'];
 		wp_mkdir_p( $cache_dir );
 	}

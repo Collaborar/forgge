@@ -228,15 +228,6 @@ class ConditionFactoryTest extends TestCase {
 	}
 
 	/**
-	 * @covers ::make
-	 */
-	public function testMake_Object_Exception() {
-		$this->expectException( ConfigurationException::class );
-		$this->expectExceptionMessage( 'Invalid condition options' );
-		$this->subject->make( new stdClass() );
-	}
-
-	/**
 	 * @covers ::condition
 	 */
 	public function testCondition() {

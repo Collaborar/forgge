@@ -2,12 +2,13 @@
 <ruleset name="Forgge">
 	<description>Forgge Coding Standard</description>
 	<config name="installed_paths" value="vendor/phpcompatibility/php-compatibility" />
-	<config name="testVersion" value="5.5-"/>
+	<config name="testVersion" value="8.1-"/>
 
 	<!-- Files -->
 	<file>./src</file>
 	<file>./.sami.php</file>
 	<file>./config.php</file>
+	<exclude-pattern>./tests/*</exclude-pattern>
 	<exclude-pattern>src/Support/*</exclude-pattern>
 	<exclude-pattern>src/Exceptions/Whoops/views/*</exclude-pattern>
 

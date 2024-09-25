@@ -16,14 +16,14 @@ class PostTemplateCondition implements ConditionInterface {
 	 *
 	 * @var string
 	 */
-	protected $post_template = '';
+	protected string $post_template = '';
 
 	/**
 	 * Post types to check against
 	 *
 	 * @var string[]
 	 */
-	protected $post_types = [];
+	protected array $post_types = [];
 
 	/**
 	 * Constructor
@@ -32,7 +32,7 @@ class PostTemplateCondition implements ConditionInterface {
 	 * @param string          $post_template
 	 * @param string|string[] $post_types
 	 */
-	public function __construct( $post_template, $post_types = [] ) {
+	public function __construct( string $post_template, array $post_types = [] ) {
 		$this->post_template = $post_template;
 		$this->post_types = is_array( $post_types ) ? $post_types : [$post_types];
 	}
@@ -40,7 +40,7 @@ class PostTemplateCondition implements ConditionInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSatisfied( RequestInterface $request ) {
+	public function isSatisfied( RequestInterface $request ): bool {
 		$template = get_post_meta( (int) get_the_ID(), '_wp_page_template', true );
 		$template = $template ? $template : 'default';
 		return ( is_singular( $this->post_types ) && $this->post_template === $template );
@@ -49,7 +49,7 @@ class PostTemplateCondition implements ConditionInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getArguments( RequestInterface $request ) {
+	public function getArguments( RequestInterface $request ): array {
 		return ['post_template' => $this->post_template, 'post_types' => $this->post_types];
 	}
 }

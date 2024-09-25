@@ -13,8 +13,8 @@ class Arguments {
 	 *
 	 * @return array
 	 */
-	public static function flip() {
-		$arguments = func_get_args();
+	public static function flip( ...$arguments ): array {
+		// $arguments = func_get_args();
 		$first_null = array_search( null, $arguments, true );
 
 		if ( $first_null === false ) {

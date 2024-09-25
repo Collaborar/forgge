@@ -20,7 +20,7 @@ trait ExtendsConfigTrait {
 	 * @param  mixed $config
 	 * @return mixed
 	 */
-	protected function replaceConfig( $default, $config ) {
+	protected function replaceConfig( mixed $default, mixed $config ): mixed {
 		if ( ! is_array( $default ) || ! is_array( $config ) ) {
 			return $config;
 		}
@@ -49,7 +49,7 @@ trait ExtendsConfigTrait {
 	 * @param  mixed     $default
 	 * @return void
 	 */
-	public function extendConfig( $container, $key, $default ) {
+	public function extendConfig( Container $container, string $key, mixed $default ): void {
 		$config = isset( $container[ FORGGE_CONFIG_KEY ] ) ? $container[ FORGGE_CONFIG_KEY ] : [];
 		$config = Arr::get( $config, $key, $default );
 

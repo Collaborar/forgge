@@ -13,5 +13,5 @@ interface UrlableInterface {
 	 * @param  array  $arguments
 	 * @return string
 	 */
-	public function toUrl( $arguments = [] );
+	public function toUrl( array $arguments = [] ): string;
 }
