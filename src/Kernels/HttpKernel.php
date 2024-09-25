@@ -296,7 +296,6 @@ class HttpKernel implements HttpKernelInterface {
 	 * @return array
 	 */
 	public function filterRequest( array $query_vars ): array {
-		/** @var \Forgge\Routing\RouteInterface[] */
 		$routes = $this->router->getRoutes();
 
 		foreach ( $routes as $route ) {
@@ -304,15 +303,17 @@ class HttpKernel implements HttpKernelInterface {
 				continue;
 			}
 
+			/** @var \Forgge\Routing\RouteInterface $route */
 			if ( ! $route->isSatisfied( $this->request ) ) {
 				continue;
 			}
 
 			/** @var \Forgge\Application\Application */
-			$this->container[ FORGGE_APPLICATION_KEY ]
-				->renderConfigExceptions( function () use ( $route, &$query_vars ) {
-					$query_vars = $route->applyQueryFilter( $this->request, $query_vars );
-				} );
+			$app = $this->container[ FORGGE_APPLICATION_KEY ];
+
+			$app->renderConfigExceptions( function () use ( $route, &$query_vars ) {
+				$query_vars = $route->applyQueryFilter( $this->request, $query_vars );
+			} );
 			break;
 		}
 
