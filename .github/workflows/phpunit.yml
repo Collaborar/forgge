@@ -12,24 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '7.1', '7.0' ]
-        wp-versions: ['5.9', '5.8', '5.7']
-        include:
-          - php-versions: '8.1'
-            wp-versions: '5.9'
-          - php-versions: '8.0'
-            wp-versions: '5.9'
-          - php-versions: '5.6'
-            wp-versions: '4.7'
-          - php-versions: '5.5'
-            wp-versions: '4.7'
+        php-versions: ['8.2', '8.1']
+        wp-versions: ['6.6', '6.5']
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql-version: '5.7'
+          mysql-version: '8.0'
           my-cnf: |
             collation_server=utf8_unicode_ci
             character_set_server=utf8
@@ -51,7 +42,7 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: ${{ runner.os }}-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
@@ -68,13 +59,3 @@ jobs:
 
       - name: Run tests
         run: composer run test
-
-      - name: Set up PHP 7.x for Scrutinizer
-        if: ${{ matrix.php-versions >= 8.0 }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          coverage: xdebug
-
-      - name: Upload coverage to Scrutinizer-CI.
-        run: wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./tmp/clover.xml
