@@ -41,11 +41,8 @@ class HasQueryFilterTraitTest extends TestCase {
 		$request = Mockery::mock( RequestInterface::class )->shouldIgnoreMissing();
 		$condition = Mockery::mock( CanFilterQueryInterface::class );
 
-		$this->subject->method( 'getAttribute' )
-			->withConsecutive(
-				['query'],
-				['condition']
-			)
+		$this->subject->expects( $this->exactly(2) )
+			->method( 'getAttribute' )
 			->will( $this->onConsecutiveCalls(
 				function( $query_vars, $arg1, $arg2 ) {
 					return array_merge( $query_vars, [$arg1, $arg2] );
@@ -68,11 +65,8 @@ class HasQueryFilterTraitTest extends TestCase {
 	public function testApplyQueryFilter_NonCanFilterQueryCondition_Exception() {
 		$request = Mockery::mock( RequestInterface::class )->shouldIgnoreMissing();
 
-		$this->subject->method( 'getAttribute' )
-			->withConsecutive(
-				['query'],
-				['condition']
-			)
+		$this->subject->expects( $this->exactly( 2 ) )
+			->method( 'getAttribute' )
 			->will( $this->onConsecutiveCalls(
 				function() {},
 				null

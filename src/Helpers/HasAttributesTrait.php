@@ -58,7 +58,7 @@ trait HasAttributesTrait {
 	 * @param  mixed  $value
 	 * @return static $this
 	 */
-	public function attribute( string $attribute, mixed $value ): self {
+	public function attribute( string $attribute, mixed $value ) {
 		$this->setAttribute( $attribute, $value );
 
 		return $this;
@@ -82,7 +82,7 @@ trait HasAttributesTrait {
 	 * @param  array<string, mixed> $attributes
 	 * @return static               $this
 	 */
-	public function attributes( array $attributes ): self {
+	public function attributes( array $attributes ) {
 		$this->setAttributes( $attributes );
 
 		return $this;

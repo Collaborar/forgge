@@ -39,7 +39,7 @@ interface HasAttributesInterface {
 	 * @param  mixed  $value
 	 * @return static $this
 	 */
-	public function attribute( string $attribute, mixed $value ): HasAttributesInterface;
+	public function attribute( string $attribute, mixed $value );
 
 	/**
 	 * Set attributes.
@@ -56,5 +56,5 @@ interface HasAttributesInterface {
 	 * @param  array<string, mixed> $attributes
 	 * @return static               $this
 	 */
-	public function attributes( array $attributes ): HasAttributesInterface;
+	public function attributes( array $attributes );
 }
