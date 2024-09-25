@@ -4,6 +4,7 @@
 namespace Forgge\Input;
 
 use Closure;
+use Psr\Http\Message\ResponseInterface;
 use Forgge\Requests\RequestInterface;
 
 /**
@@ -30,7 +31,7 @@ class OldInputMiddleware {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function handle( RequestInterface $request, Closure $next ): RequestInterface {
+	public function handle( RequestInterface $request, Closure $next ): ResponseInterface {
 		if ( $this->old_input->enabled() && $request->isPost() ) {
 			$this->old_input->set( $request->body() );
 		}

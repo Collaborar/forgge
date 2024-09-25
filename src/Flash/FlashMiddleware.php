@@ -31,7 +31,7 @@ class FlashMiddleware {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function handle( RequestInterface $request, Closure $next ): RequestInterface {
+	public function handle( RequestInterface $request, Closure $next ): ResponseInterface {
 		$response = $next( $request );
 
 		if ( $this->flash->enabled() ) {

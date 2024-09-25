@@ -169,7 +169,7 @@ class HttpKernel implements HttpKernelInterface {
 	 * @return ResponseInterface
 	 */
 	protected function executeHandler( Handler $handler, array $arguments = [] ): ResponseInterface {
-		$response = $handler->execute( array_values( $arguments ) );
+		$response = $handler->execute( ...array_values( $arguments ) );
 		$response = $this->toResponse( $response );
 
 		if ( ! $response instanceof ResponseInterface ) {
@@ -411,7 +411,7 @@ class HttpKernel implements HttpKernelInterface {
 			$page_hook = get_plugin_page_hook( $plugin_page, $the_parent );
 		}
 
-		return $page_hook;
+		return (string) $page_hook;
 	}
 
 	/**

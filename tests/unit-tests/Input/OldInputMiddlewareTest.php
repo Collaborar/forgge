@@ -3,6 +3,7 @@
 namespace ForggeTests\Input;
 
 use Mockery;
+use Psr\Http\Message\ResponseInterface;
 use Forgge\Input\OldInput;
 use Forgge\Input\OldInputMiddleware;
 use Forgge\Requests\RequestInterface;
@@ -29,13 +30,14 @@ class OldInputMiddlewareTest extends TestCase {
 	 */
 	public function testHandle_DisabledPostRequest_Ignore() {
 		$request = Mockery::mock( RequestInterface::class );
+		$response = Mockery::mock( ResponseInterface::class );
 
 		$this->old_input->shouldReceive( 'enabled' )
 			->andReturn( false );
 		$this->old_input->shouldNotReceive( 'set' );
 
-		$result = $this->subject->handle( $request, function( $request ) { return $request; } );
-		$this->assertSame( $request, $result );
+		$result = $this->subject->handle( $request, function( $request ) use ($response) { return $response; } );
+		$this->assertSame( $response, $result );
 	}
 
 	/**
@@ -44,6 +46,7 @@ class OldInputMiddlewareTest extends TestCase {
 	public function testHandle_EnabledPostRequest_StoresAll() {
 		$expected = ['foo' => 'bar'];
 		$request = Mockery::mock( RequestInterface::class );
+		$response = Mockery::mock( ResponseInterface::class );
 
 		$request->shouldReceive( 'isPost' )
 			->andReturn( true );
@@ -57,8 +60,8 @@ class OldInputMiddlewareTest extends TestCase {
 			->with( $expected )
 			->once();
 
-		$result = $this->subject->handle( $request, function( $request ) { return $request; } );
-		$this->assertSame( $request, $result );
+		$result = $this->subject->handle( $request, function( $request ) use ($response) { return $response; } );
+		$this->assertSame( $response, $result );
 	}
 
 	/**
@@ -66,6 +69,7 @@ class OldInputMiddlewareTest extends TestCase {
 	 */
 	public function testHandle_EnabledGetRequest_Ignore() {
 		$request = Mockery::mock( RequestInterface::class );
+		$response = Mockery::mock( ResponseInterface::class );
 
 		$request->shouldReceive( 'isPost' )
 			->andReturn( false );
@@ -74,7 +78,7 @@ class OldInputMiddlewareTest extends TestCase {
 			->andReturn( true );
 		$this->old_input->shouldNotReceive( 'set' );
 
-		$result = $this->subject->handle( $request, function( $request ) { return $request; } );
-		$this->assertSame( $request, $result );
+		$result = $this->subject->handle( $request, function( $request ) use ($response) { return $response; } );
+		$this->assertSame( $response, $result );
 	}
 }

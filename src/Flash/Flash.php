@@ -43,10 +43,10 @@ class Flash {
 	 * Constructor.
 	 *
 	 * @codeCoverageIgnore
-	 * @param array|ArrayAccess $store
+	 * @param array|ArrayAccess|null $store
 	 * @param string             $store_key
 	 */
-	public function __construct( array|ArrayAccess &$store, string $store_key = '__forggeFlash' ) {
+	public function __construct( array|ArrayAccess|null &$store, string $store_key = '__forggeFlash' ) {
 		$this->store_key = $store_key;
 		$this->setStore( $store );
 	}
@@ -87,10 +87,10 @@ class Flash {
 	/**
 	 * Set the store for flash messages.
 	 *
-	 * @param  array|ArrayAccess $store
+	 * @param  array|ArrayAccess|null $store
 	 * @return void
 	 */
-	public function setStore( array|ArrayAccess &$store ): void {
+	public function setStore( array|ArrayAccess|null &$store ): void {
 		if ( ! $this->isValidStore( $store ) ) {
 			return;
 		}

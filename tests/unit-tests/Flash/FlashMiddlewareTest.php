@@ -3,6 +3,7 @@
 namespace ForggeTests\Input;
 
 use Mockery;
+use Psr\Http\Message\ResponseInterface;
 use Forgge\Flash\FlashMiddleware;
 use Forgge\Requests\RequestInterface;
 use ForggeTestTools\TestCase;
@@ -28,14 +29,15 @@ class FlashMiddlewareTest extends TestCase {
 	 */
 	public function testHandle_Disabled_Ignore() {
 		$request = Mockery::mock( RequestInterface::class );
+		$response = Mockery::mock( ResponseInterface::class );
 
 		$this->flash->shouldReceive( 'enabled' )
 			->andReturn( false );
 		$this->flash->shouldNotReceive( 'shift' );
 		$this->flash->shouldNotReceive( 'save' );
 
-		$result = $this->subject->handle( $request, function( $request ) { return $request; } );
-		$this->assertSame( $request, $result );
+		$result = $this->subject->handle( $request, function( $request ) use ($response) { return $response; } );
+		$this->assertSame( $response, $result );
 	}
 
 	/**
@@ -43,6 +45,7 @@ class FlashMiddlewareTest extends TestCase {
 	 */
 	public function testHandle_Enabled_StoresAll() {
 		$request = Mockery::mock( RequestInterface::class );
+		$response = Mockery::mock( ResponseInterface::class );
 
 		$this->flash->shouldReceive( 'enabled' )
 			->andReturn( true )
@@ -52,7 +55,7 @@ class FlashMiddlewareTest extends TestCase {
 		$this->flash->shouldReceive( 'save' )
 			->ordered();
 
-		$result = $this->subject->handle( $request, function( $request ) { return $request; } );
-		$this->assertSame( $request, $result );
+		$result = $this->subject->handle( $request, function( $request ) use ($response) { return $response; } );
+		$this->assertSame( $response, $result );
 	}
 }

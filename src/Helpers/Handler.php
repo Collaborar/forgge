@@ -155,7 +155,7 @@ class Handler {
 	 * @param  mixed ,...$arguments
 	 * @return mixed
 	 */
-	public function execute( ...$arguments ): mixed {
+	public function execute( mixed ...$arguments ): mixed {
 		$instance = $this->make();
 
 		if ( $instance instanceof Closure ) {
