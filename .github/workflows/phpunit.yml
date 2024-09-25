@@ -16,7 +16,7 @@ jobs:
         wp-versions: ['6.6', '6.5']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
