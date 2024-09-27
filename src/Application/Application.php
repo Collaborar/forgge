@@ -119,6 +119,10 @@ class Application {
 			return;
 		}
 
+		if ( is_rest() ) {
+			$this->loadRoutesGroup( 'rest' );
+		}
+
 		$this->loadRoutesGroup( 'web' );
 	}
 
@@ -146,6 +150,7 @@ class Application {
 
 		$attributes['middleware'] = $middleware;
 
+		/** @var \Forgge\Routing\RouteBlueprint */
 		$blueprint = $this->resolve( FORGGE_ROUTING_ROUTE_BLUEPRINT_KEY );
 		$blueprint->attributes( $attributes )->group( $file );
 	}

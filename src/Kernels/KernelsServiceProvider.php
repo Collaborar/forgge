@@ -37,6 +37,7 @@ class KernelsServiceProvider implements ServiceProviderInterface {
 			'web' => [],
 			'ajax' => [],
 			'admin' => [],
+			'rest' => [],
 		] );
 
 		$this->extendConfig( $container, 'middleware_priority', [] );

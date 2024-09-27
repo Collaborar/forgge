@@ -34,6 +34,7 @@ class RoutingServiceProvider implements ServiceProviderInterface {
 		'query_var' => Conditions\QueryVarCondition::class,
 		'ajax' => Conditions\AjaxCondition::class,
 		'admin' => Conditions\AdminCondition::class,
+		'rest' => Conditions\RestCondition::class,
 	];
 
 	/**
@@ -63,6 +64,13 @@ class RoutingServiceProvider implements ServiceProviderInterface {
 				'attributes'  => [
 					'middleware' => ['ajax'],
 					'namespace' => $namespace . 'Controllers\\Ajax\\',
+				],
+			],
+			'rest' => [
+				'definitions' => '',
+				'attributes'  => [
+					'middleware' => ['rest'],
+					'namespace' => $namespace . 'Controllers\\Rest\\',
 				],
 			],
 		] );

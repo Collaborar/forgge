@@ -287,6 +287,21 @@ class HttpKernel implements HttpKernelInterface {
 
 		// Admin.
 		add_action( 'admin_init', [$this, 'registerAdminAction'] );
+
+		add_action( 'rest_api_init', [$this, 'registerRest'] );
+	}
+
+	public function registerRest() {
+		$route = $this->router->execute( $this->request );
+
+		if ( $route === null ) {
+			return null;
+		}
+
+		$route_arguments = $route->getArguments( $this->request );
+
+		var_dump( $route_arguments );
+		exit();
 	}
 
 	/**
