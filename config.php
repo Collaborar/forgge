@@ -5,7 +5,7 @@
  * Current version.
  */
 if ( ! defined( 'FORGGE_VERSION' ) ) {
-	define( 'FORGGE_VERSION', '0.17.0' );
+	define( 'FORGGE_VERSION', '1.0.0' );
 }
 
 /**
